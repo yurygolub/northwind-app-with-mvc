@@ -22,7 +22,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Services.EntityFr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Services.EntityFrameworkCore.Blogging", "Northwind.Services.EntityFrameworkCore.Blogging\Northwind.Services.EntityFrameworkCore.Blogging.csproj", "{5B0CD092-8297-4CB5-9E3A-F5E4FC7563AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthwindMvcClient", "NorthwindMvcClient\NorthwindMvcClient.csproj", "{69F02161-264A-4A5A-9A8F-716C8A2DF2AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NorthwindMvcClient", "NorthwindMvcClient\NorthwindMvcClient.csproj", "{69F02161-264A-4A5A-9A8F-716C8A2DF2AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

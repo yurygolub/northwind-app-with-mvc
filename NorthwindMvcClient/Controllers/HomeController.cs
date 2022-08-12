@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NorthwindMvcClient.Models;
+using NorthwindMvcClient.ViewModels;
 
 namespace NorthwindMvcClient.Controllers
 {

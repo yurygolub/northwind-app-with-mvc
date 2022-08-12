@@ -21,6 +21,9 @@ namespace NorthwindMvcClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services
+                .AddTransient<IProductManagementService, ProductManagementService>()
+                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
