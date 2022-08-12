@@ -36,7 +36,16 @@ namespace Northwind.Services.DataAccess.Products
 
         public async Task<bool> DeleteProductCategoryPictureAsync(int categoryId)
         {
-            var category = await this.dataAccessObject.FindProductCategoryAsync(categoryId);
+            ProductCategoryTransferObject category;
+            try
+            {
+                category = await this.dataAccessObject.FindProductCategoryAsync(categoryId);
+            }
+            catch (ProductCategoryNotFoundException)
+            {
+                category = null;
+            }
+
             if (category is null)
             {
                 return false;
