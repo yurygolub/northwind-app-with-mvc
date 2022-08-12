@@ -49,6 +49,10 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
             if (employee != null)
             {
                 this.context.Employees.Remove(employee);
+
+                var orders = this.context.Orders.Where(order => order.Employee == employee);
+                this.context.Orders.RemoveRange(orders);
+
                 await this.context.SaveChangesAsync();
                 return true;
             }
@@ -147,7 +151,6 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         {
             return new EmployeeEntity()
             {
-                EmployeeId = employee.EmployeeID,
                 Address = employee.Address,
                 BirthDate = employee.BirthDate,
                 City = employee.City,

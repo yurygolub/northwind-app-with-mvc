@@ -49,6 +49,14 @@ namespace Northwind.Services.EntityFrameworkCore.Products
             if (category != null)
             {
                 this.context.Categories.Remove(category);
+
+                var products = this.context.Products.Where(product => product.Category == category);
+                this.context.Products.RemoveRange(products);
+
+                var orderDetails = products.SelectMany(
+                    p => this.context.OrderDetails.Where(orderDet => orderDet.Product == p));
+                this.context.OrderDetails.RemoveRange(orderDetails);
+
                 await this.context.SaveChangesAsync();
                 return true;
             }
@@ -138,7 +146,6 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         {
             return new CategoryEntity()
             {
-                CategoryId = productCategory.Id,
                 CategoryName = productCategory.Name,
                 Description = productCategory.Description,
                 Picture = productCategory.Picture,
