@@ -8,6 +8,7 @@ using Northwind.Services.Products;
 
 namespace NorthwindApiApp.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
