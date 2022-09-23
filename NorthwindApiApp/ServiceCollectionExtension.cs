@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Northwind.Services;
+using Northwind.DataAccess;
+using Northwind.DataAccess.SqlServer;
 using Northwind.Services.Blogging;
 using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Blogging;
 using Northwind.Services.EntityFrameworkCore.Blogging.Context;
 using Northwind.Services.Products;
-using Northwind.Services.SqlServer;
 using DataAccess = Northwind.Services.DataAccess;
 using EntityFramework = Northwind.Services.EntityFrameworkCore;
 

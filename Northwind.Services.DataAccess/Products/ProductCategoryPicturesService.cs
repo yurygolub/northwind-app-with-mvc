@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Northwind.DataAccess;
+using Northwind.DataAccess.Products;
 using Northwind.Services.Products;
 
 namespace Northwind.Services.DataAccess.Products
