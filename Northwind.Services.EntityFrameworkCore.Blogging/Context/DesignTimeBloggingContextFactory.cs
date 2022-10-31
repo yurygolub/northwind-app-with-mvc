@@ -30,7 +30,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging.Context
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new Exception($"{connectioStringPrefix}{connectionStringName} environment variable is not set.");
+                throw new EnvironmentVariableException($"{connectioStringPrefix}{connectionStringName} environment variable is not set.");
             }
 
             this.logger?.LogInformation($"Using {connectioStringPrefix}{connectionStringName} environment variable as a connection string.");
