@@ -18,12 +18,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         /// <param name="context">NorthwindContext.</param>
         public EmployeePicturesService(Context.NorthwindContext context)
         {
-            if (context is null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            this.context = context;
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <inheritdoc/>
@@ -56,10 +51,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         /// <inheritdoc/>
         public async Task<bool> UpdateEmployeePictureAsync(int employeeId, Stream stream)
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
             var employee = await this.context.Employees.FindAsync(employeeId);
             if (employee is null)

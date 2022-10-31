@@ -24,23 +24,14 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <param name="mapper">Mapper for entity mapping.</param>
         public ProductManagementService(Context.NorthwindContext context, IMapper mapper)
         {
-            if (context is null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
-            this.context = context;
         }
 
         /// <inheritdoc/>
         public async Task<int> CreateProductAsync(Product product)
         {
-            if (product is null)
-            {
-                throw new ArgumentNullException(nameof(product));
-            }
+            _ = product ?? throw new ArgumentNullException(nameof(product));
 
             await this.context.Products.AddAsync(this.mapper.Map<ProductEntity>(product));
             await this.context.SaveChangesAsync();
@@ -66,10 +57,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <inheritdoc/>
         public async IAsyncEnumerable<Product> GetProductsByNameAsync(IEnumerable<string> names)
         {
-            if (names is null)
-            {
-                throw new ArgumentNullException(nameof(names));
-            }
+            _ = names ?? throw new ArgumentNullException(nameof(names));
 
             var products = from product in this.context.Products
                            from name in names
@@ -124,10 +112,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <inheritdoc/>
         public async Task<bool> UpdateProductAsync(int productId, Product product)
         {
-            if (product is null)
-            {
-                throw new ArgumentNullException(nameof(product));
-            }
+            _ = product ?? throw new ArgumentNullException(nameof(product));
 
             var contextProduct = await this.context.Products.FindAsync(productId);
             if (contextProduct is null)

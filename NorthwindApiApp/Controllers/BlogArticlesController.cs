@@ -61,10 +61,7 @@ namespace NorthwindApiApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBlogArticleAsync([FromBody] BlogArticle blogArticle)
         {
-            if (blogArticle is null)
-            {
-                throw new ArgumentNullException(nameof(blogArticle));
-            }
+            _ = blogArticle ?? throw new ArgumentNullException(nameof(blogArticle));
 
             var author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
             if (author is null)

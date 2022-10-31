@@ -30,10 +30,7 @@ namespace Northwind.DataAccess.SqlServer.Products
         /// <inheritdoc/>
         public async Task<int> InsertProductCategoryAsync(ProductCategoryTransferObject productCategory)
         {
-            if (productCategory == null)
-            {
-                throw new ArgumentNullException(nameof(productCategory));
-            }
+            _ = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
 
             using var command = new SqlCommand("InsertProductCategory", this.connection)
             {
@@ -149,10 +146,7 @@ namespace Northwind.DataAccess.SqlServer.Products
         /// <inheritdoc/>
         public async IAsyncEnumerable<ProductCategoryTransferObject> SelectProductCategoriesByNameAsync(IEnumerable<string> productCategoryNames)
         {
-            if (productCategoryNames == null)
-            {
-                throw new ArgumentNullException(nameof(productCategoryNames));
-            }
+            _ = productCategoryNames ?? throw new ArgumentNullException(nameof(productCategoryNames));
 
             if (productCategoryNames.Any())
             {
@@ -193,10 +187,7 @@ namespace Northwind.DataAccess.SqlServer.Products
         /// <inheritdoc/>
         public async Task<bool> UpdateProductCategoryAsync(int productCategoryId, ProductCategoryTransferObject productCategory)
         {
-            if (productCategory == null)
-            {
-                throw new ArgumentNullException(nameof(productCategory));
-            }
+            _ = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
 
             using var command = new SqlCommand("UpdateProductCategory", this.connection)
             {

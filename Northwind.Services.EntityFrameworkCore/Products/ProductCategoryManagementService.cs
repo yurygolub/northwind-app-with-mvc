@@ -24,23 +24,14 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <param name="mapper">Mapper for entity mapping.</param>
         public ProductCategoryManagementService(Context.NorthwindContext context, IMapper mapper)
         {
-            if (context is null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
-            this.context = context;
         }
 
         /// <inheritdoc/>
         public async Task<int> CreateCategoryAsync(ProductCategory productCategory)
         {
-            if (productCategory is null)
-            {
-                throw new ArgumentNullException(nameof(productCategory));
-            }
+            _ = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
 
             await this.context.Categories.AddAsync(this.mapper.Map<CategoryEntity>(productCategory));
             await this.context.SaveChangesAsync();
@@ -72,10 +63,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <inheritdoc/>
         public async IAsyncEnumerable<ProductCategory> GetCategoriesByNameAsync(IEnumerable<string> names)
         {
-            if (names is null)
-            {
-                throw new ArgumentNullException(nameof(names));
-            }
+            _ = names ?? throw new ArgumentNullException(nameof(names));
 
             var categories = from category in this.context.Categories
                            from name in names
@@ -117,10 +105,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <inheritdoc/>
         public async Task<bool> UpdateCategoryAsync(int categoryId, ProductCategory productCategory)
         {
-            if (productCategory is null)
-            {
-                throw new ArgumentNullException(nameof(productCategory));
-            }
+            _ = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
 
             var contextCategory = await this.context.Categories.FindAsync(categoryId);
             if (contextCategory is null)

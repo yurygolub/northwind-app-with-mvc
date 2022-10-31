@@ -18,12 +18,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <param name="context">NorthwindContext.</param>
         public ProductCategoryPicturesService(Context.NorthwindContext context)
         {
-            if (context is null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            this.context = context;
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         /// <inheritdoc/>
@@ -56,10 +51,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// <inheritdoc/>
         public async Task<bool> UpdateProductCategoryPictureAsync(int categoryId, Stream stream)
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
             var contextCategory = await this.context.Categories.FindAsync(categoryId);
             if (contextCategory is null)

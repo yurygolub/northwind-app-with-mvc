@@ -18,11 +18,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging
 
         public BloggingService(IDesignTimeDbContextFactory<BloggingContext> factory, IMapper mapper)
         {
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
+            _ = factory ?? throw new ArgumentNullException(nameof(factory));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             this.context = factory.CreateDbContext(null);
@@ -54,10 +50,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging
 
         public async Task<int> CreateBlogArticleAsync(BlogArticle blogArticle)
         {
-            if (blogArticle is null)
-            {
-                throw new ArgumentNullException(nameof(blogArticle));
-            }
+            _ = blogArticle ?? throw new ArgumentNullException(nameof(blogArticle));
 
             BlogArticleEntity blogArticleEntity = this.mapper.Map<BlogArticleEntity>(blogArticle);
 
@@ -84,10 +77,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging
 
         public async Task<bool> UpdateBlogArticleAsync(int blogArticleId, BlogArticle blogArticle)
         {
-            if (blogArticle is null)
-            {
-                throw new ArgumentNullException(nameof(blogArticle));
-            }
+            _ = blogArticle ?? throw new ArgumentNullException(nameof(blogArticle));
 
             var blogArticleEntity = await this.context.BlogArticles.FindAsync(blogArticleId);
             if (blogArticleEntity is null)

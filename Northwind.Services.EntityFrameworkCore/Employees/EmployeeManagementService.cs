@@ -24,23 +24,14 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         /// <param name="mapper">Mapper for entity mapping.</param>
         public EmployeeManagementService(Context.NorthwindContext context, IMapper mapper)
         {
-            if (context is null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
-            this.context = context;
         }
 
         /// <inheritdoc/>
         public async Task<int> CreateEmployeeAsync(Employee employee)
         {
-            if (employee is null)
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
+            _ = employee ?? throw new ArgumentNullException(nameof(employee));
 
             await this.context.Employees.AddAsync(this.mapper.Map<EmployeeEntity>(employee));
             await this.context.SaveChangesAsync();
@@ -94,10 +85,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         /// <inheritdoc/>
         public async Task<bool> UpdateEmployeeAsync(int employeeId, Employee employee)
         {
-            if (employee is null)
-            {
-                throw new ArgumentNullException(nameof(employee));
-            }
+            _ = employee ?? throw new ArgumentNullException(nameof(employee));
 
             var contextEmployee = await this.context.Employees.FindAsync(employeeId);
             if (contextEmployee is null)
