@@ -43,12 +43,7 @@ namespace Northwind.Services.DataAccess.Products
         /// <inheritdoc/>
         public async Task<bool> DestroyCategoryAsync(int categoryId)
         {
-            if (await this.dataAccessObject.DeleteProductCategoryAsync(categoryId))
-            {
-                return true;
-            }
-
-            return false;
+            return await this.dataAccessObject.DeleteProductCategoryAsync(categoryId);
         }
 
         /// <inheritdoc/>
@@ -92,12 +87,9 @@ namespace Northwind.Services.DataAccess.Products
         {
             _ = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
 
-            if (await this.dataAccessObject.UpdateProductCategoryAsync(categoryId, this.mapper.Map<ProductCategoryTransferObject>(productCategory)))
-            {
-                return true;
-            }
-
-            return false;
+            return await this.dataAccessObject.UpdateProductCategoryAsync(
+                categoryId,
+                this.mapper.Map<ProductCategoryTransferObject>(productCategory));
         }
     }
 }

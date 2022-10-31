@@ -41,12 +41,7 @@ namespace Northwind.Services.DataAccess.Employees
         /// <inheritdoc/>
         public async Task<bool> DestroyEmployeeAsync(int employeeId)
         {
-            if (await this.dataAccessObject.DeleteEmployeeAsync(employeeId))
-            {
-                return true;
-            }
-
-            return false;
+            return await this.dataAccessObject.DeleteEmployeeAsync(employeeId);
         }
 
         /// <inheritdoc/>
@@ -78,12 +73,9 @@ namespace Northwind.Services.DataAccess.Employees
         {
             _ = employee ?? throw new ArgumentNullException(nameof(employee));
 
-            if (await this.dataAccessObject.UpdateEmployeeAsync(employeeId, this.mapper.Map<EmployeeTransferObject>(employee)))
-            {
-                return true;
-            }
-
-            return false;
+            return await this.dataAccessObject.UpdateEmployeeAsync(
+                employeeId,
+                this.mapper.Map<EmployeeTransferObject>(employee));
         }
     }
 }
