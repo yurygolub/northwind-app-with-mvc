@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Entities;
@@ -14,17 +15,21 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
     public class EmployeeManagementService : IEmployeeManagementService
     {
         private readonly Context.NorthwindContext context;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeManagementService"/> class.
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
-        public EmployeeManagementService(Context.NorthwindContext context)
+        /// <param name="mapper">Mapper for entity mapping.</param>
+        public EmployeeManagementService(Context.NorthwindContext context, IMapper mapper)
         {
             if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
+
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             this.context = context;
         }
@@ -37,7 +42,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
                 throw new ArgumentNullException(nameof(employee));
             }
 
-            await this.context.Employees.AddAsync(MapEmployee(employee));
+            await this.context.Employees.AddAsync(this.mapper.Map<EmployeeEntity>(employee));
             await this.context.SaveChangesAsync();
             return employee.EmployeeID;
         }
@@ -66,7 +71,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
             var employees = this.context.Employees
                     .Skip(offset)
                     .Take(limit)
-                    .Select(e => MapEmployee(e));
+                    .Select(e => this.mapper.Map<Employee>(e));
 
             await foreach (var employee in employees.AsAsyncEnumerable())
             {
@@ -83,7 +88,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
                 return null;
             }
 
-            return MapEmployee(contextEmployee);
+            return this.mapper.Map<Employee>(contextEmployee);
         }
 
         /// <inheritdoc/>
@@ -120,55 +125,6 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
 
             await this.context.SaveChangesAsync();
             return true;
-        }
-
-        private static Employee MapEmployee(EmployeeEntity employee)
-        {
-            return new Employee()
-            {
-                EmployeeID = employee.EmployeeId,
-                Address = employee.Address,
-                BirthDate = employee.BirthDate,
-                City = employee.City,
-                Country = employee.Country,
-                Extension = employee.Extension,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                HireDate = employee.HireDate,
-                HomePhone = employee.HomePhone,
-                Notes = employee.Notes,
-                Photo = employee.Photo,
-                PhotoPath = employee.PhotoPath,
-                PostalCode = employee.PostalCode,
-                Region = employee.Region,
-                ReportsTo = employee.ReportsTo,
-                Title = employee.Title,
-                TitleOfCourtesy = employee.TitleOfCourtesy,
-            };
-        }
-
-        private static EmployeeEntity MapEmployee(Employee employee)
-        {
-            return new EmployeeEntity()
-            {
-                Address = employee.Address,
-                BirthDate = employee.BirthDate,
-                City = employee.City,
-                Country = employee.Country,
-                Extension = employee.Extension,
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                HireDate = employee.HireDate,
-                HomePhone = employee.HomePhone,
-                Notes = employee.Notes,
-                Photo = employee.Photo,
-                PhotoPath = employee.PhotoPath,
-                PostalCode = employee.PostalCode,
-                Region = employee.Region,
-                ReportsTo = employee.ReportsTo,
-                Title = employee.Title,
-                TitleOfCourtesy = employee.TitleOfCourtesy,
-            };
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Services.EntityFrameworkCore.Entities;
 using Northwind.Services.Products;
@@ -14,17 +15,21 @@ namespace Northwind.Services.EntityFrameworkCore.Products
     public class ProductManagementService : IProductManagementService
     {
         private readonly Context.NorthwindContext context;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductManagementService"/> class.
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
-        public ProductManagementService(Context.NorthwindContext context)
+        /// <param name="mapper">Mapper for entity mapping.</param>
+        public ProductManagementService(Context.NorthwindContext context, IMapper mapper)
         {
             if (context is null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
+
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
             this.context = context;
         }
@@ -37,7 +42,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
                 throw new ArgumentNullException(nameof(product));
             }
 
-            await this.context.Products.AddAsync(MapProduct(product));
+            await this.context.Products.AddAsync(this.mapper.Map<ProductEntity>(product));
             await this.context.SaveChangesAsync();
             return product.Id;
         }
@@ -69,7 +74,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
             var products = from product in this.context.Products
                            from name in names
                            where product.ProductName == name
-                           select MapProduct(product);
+                           select this.mapper.Map<Product>(product);
 
             await foreach (var product in products.AsAsyncEnumerable())
             {
@@ -83,7 +88,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
             var products = this.context.Products
                     .Skip(offset)
                     .Take(limit)
-                    .Select(p => MapProduct(p));
+                    .Select(p => this.mapper.Map<Product>(p));
 
             await foreach (var product in products.AsAsyncEnumerable())
             {
@@ -96,7 +101,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         {
             var products = from product in this.context.Products
                            where product.CategoryId == categoryId
-                           select MapProduct(product);
+                           select this.mapper.Map<Product>(product);
 
             await foreach (var product in products.AsAsyncEnumerable())
             {
@@ -113,7 +118,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
                 return null;
             }
 
-            return MapProduct(contextProduct);
+            return this.mapper.Map<Product>(contextProduct);
         }
 
         /// <inheritdoc/>
@@ -142,39 +147,6 @@ namespace Northwind.Services.EntityFrameworkCore.Products
 
             await this.context.SaveChangesAsync();
             return true;
-        }
-
-        private static Product MapProduct(ProductEntity product)
-        {
-            return new Product()
-            {
-                Id = product.ProductId,
-                CategoryId = product.CategoryId,
-                Discontinued = product.Discontinued,
-                Name = product.ProductName,
-                QuantityPerUnit = product.QuantityPerUnit,
-                ReorderLevel = product.ReorderLevel,
-                SupplierId = product.SupplierId,
-                UnitPrice = product.UnitPrice,
-                UnitsInStock = product.UnitsInStock,
-                UnitsOnOrder = product.UnitsOnOrder,
-            };
-        }
-
-        private static ProductEntity MapProduct(Product product)
-        {
-            return new ProductEntity()
-            {
-                CategoryId = product.CategoryId,
-                Discontinued = product.Discontinued,
-                ProductName = product.Name,
-                QuantityPerUnit = product.QuantityPerUnit,
-                ReorderLevel = product.ReorderLevel,
-                SupplierId = product.SupplierId,
-                UnitPrice = product.UnitPrice,
-                UnitsInStock = product.UnitsInStock,
-                UnitsOnOrder = product.UnitsOnOrder,
-            };
         }
     }
 }

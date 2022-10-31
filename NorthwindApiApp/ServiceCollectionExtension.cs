@@ -8,6 +8,7 @@ using Northwind.Services.Blogging;
 using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Blogging;
 using Northwind.Services.EntityFrameworkCore.Blogging.Context;
+using Northwind.Services.EntityFrameworkCore.Blogging.MappingProfiles;
 using Northwind.Services.Products;
 using DataAccess = Northwind.Services.DataAccess;
 using EntityFramework = Northwind.Services.EntityFrameworkCore;
@@ -27,7 +28,8 @@ namespace NorthwindApiApp
                 .AddTransient<IEmployeeManagementService, DataAccess.Employees.EmployeeManagementService>()
                 .AddTransient<IEmployeePicturesService, DataAccess.Employees.EmployeePicturesService>()
                 .AddScoped(s => new SqlConnection(configuration.GetConnectionString("SqlConnection")))
-                .AddTransient<NorthwindDataAccessFactory, SqlServerDataAccessFactory>();
+                .AddTransient<NorthwindDataAccessFactory, SqlServerDataAccessFactory>()
+                .AddAutoMapper(typeof(DataAccess.MappingProfiles.MappingProfile));
         }
 
         public static IServiceCollection AddEfServices(this IServiceCollection services, IConfiguration configuration)
@@ -40,7 +42,8 @@ namespace NorthwindApiApp
                 .AddTransient<IEmployeePicturesService, EntityFramework.Employees.EmployeePicturesService>()
                 .AddTransient<IBloggingService, BloggingService>()
                 .AddTransient<IDesignTimeDbContextFactory<BloggingContext>, DesignTimeBloggingContextFactory>()
-                .AddScoped(s => new EntityFramework.Context.NorthwindContext(configuration.GetConnectionString("SqlConnection")));
+                .AddScoped(s => new EntityFramework.Context.NorthwindContext(configuration.GetConnectionString("SqlConnection")))
+                .AddAutoMapper(typeof(MappingProfile), typeof(EntityFramework.MappingProfiles.MappingProfile));
         }
     }
 }
