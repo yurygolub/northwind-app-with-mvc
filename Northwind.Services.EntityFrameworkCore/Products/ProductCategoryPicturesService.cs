@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Northwind.Services.EntityFrameworkCore.Context;
 using Northwind.Services.Products;
 
 namespace Northwind.Services.EntityFrameworkCore.Products
@@ -10,13 +11,13 @@ namespace Northwind.Services.EntityFrameworkCore.Products
     /// </summary>
     public class ProductCategoryPicturesService : IProductCategoryPicturesService
     {
-        private readonly Context.NorthwindContext context;
+        private readonly NorthwindContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductCategoryPicturesService"/> class.
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
-        public ProductCategoryPicturesService(Context.NorthwindContext context)
+        public ProductCategoryPicturesService(NorthwindContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

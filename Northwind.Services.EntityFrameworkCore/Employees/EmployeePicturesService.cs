@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Northwind.Services.Employees;
+using Northwind.Services.EntityFrameworkCore.Context;
 
 namespace Northwind.Services.EntityFrameworkCore.Employees
 {
@@ -10,13 +11,13 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
     /// </summary>
     public class EmployeePicturesService : IEmployeePicturesService
     {
-        private readonly Context.NorthwindContext context;
+        private readonly NorthwindContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeePicturesService"/> class.
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
-        public EmployeePicturesService(Context.NorthwindContext context)
+        public EmployeePicturesService(NorthwindContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Northwind.Services.EntityFrameworkCore.Context;
 using Northwind.Services.EntityFrameworkCore.Entities;
 using Northwind.Services.Products;
 
@@ -14,7 +15,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
     /// </summary>
     public class ProductManagementService : IProductManagementService
     {
-        private readonly Context.NorthwindContext context;
+        private readonly NorthwindContext context;
         private readonly IMapper mapper;
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
         /// <param name="mapper">Mapper for entity mapping.</param>
-        public ProductManagementService(Context.NorthwindContext context, IMapper mapper)
+        public ProductManagementService(NorthwindContext context, IMapper mapper)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

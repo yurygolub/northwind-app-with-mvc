@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Northwind.Services.Employees;
+using Northwind.Services.EntityFrameworkCore.Context;
 using Northwind.Services.EntityFrameworkCore.Entities;
 
 namespace Northwind.Services.EntityFrameworkCore.Employees
@@ -14,7 +15,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
     /// </summary>
     public class EmployeeManagementService : IEmployeeManagementService
     {
-        private readonly Context.NorthwindContext context;
+        private readonly NorthwindContext context;
         private readonly IMapper mapper;
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         /// </summary>
         /// <param name="context">NorthwindContext.</param>
         /// <param name="mapper">Mapper for entity mapping.</param>
-        public EmployeeManagementService(Context.NorthwindContext context, IMapper mapper)
+        public EmployeeManagementService(NorthwindContext context, IMapper mapper)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
