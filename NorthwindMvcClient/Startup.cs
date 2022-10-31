@@ -18,15 +18,7 @@ namespace NorthwindMvcClient
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllersWithViews();
-            services
-                .AddTransient<IProductManagementService, ProductManagementService>()
-                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")));
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -51,6 +43,14 @@ namespace NorthwindMvcClient
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllersWithViews();
+            services
+                .AddTransient<IProductManagementService, ProductManagementService>()
+                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")));
         }
     }
 }

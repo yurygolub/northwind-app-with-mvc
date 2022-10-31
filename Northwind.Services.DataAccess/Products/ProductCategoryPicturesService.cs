@@ -52,11 +52,6 @@ namespace Northwind.Services.DataAccess.Products
             }
             catch (ProductCategoryNotFoundException)
             {
-                category = null;
-            }
-
-            if (category is null)
-            {
                 return false;
             }
 
