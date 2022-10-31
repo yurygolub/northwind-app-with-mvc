@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Northwind.Services.EntityFrameworkCore.Context;
+using Northwind.Services.EntityFrameworkCore.MappingProfiles;
 using Northwind.Services.EntityFrameworkCore.Products;
 using Northwind.Services.Products;
 
@@ -50,7 +51,8 @@ namespace NorthwindMvcClient
             services.AddControllersWithViews();
             services
                 .AddTransient<IProductManagementService, ProductManagementService>()
-                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")));
+                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
+                .AddAutoMapper(typeof(MappingProfile));
         }
     }
 }
