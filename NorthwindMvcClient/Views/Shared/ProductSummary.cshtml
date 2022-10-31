@@ -1,17 +1,19 @@
 ﻿@model Product
 
-<div class="bg-faded p-1">
-    <h4>
-        @Model.Name
-        <span class="badge badge-pill badge-primary" style="float:right">
-            <small>@(((decimal)Model.UnitPrice).ToString("c"))</small>
-        </span>
-    </h4>
+<tr>
+    <td>@Model.Id</td>
+    <td>@Model.Name</td>
+    <td>@(((decimal)Model.UnitPrice).ToString("c"))</td>
+    <td>
+        <NavLink class="btn btn-warning btn-sm" href="">
+            Edit
+        </NavLink>
 
-    <form method="post" asp-action="Remove" asp-controller="Product">
-		<input type="hidden" name="id" value="@Model.Id"/>
-		<button type="submit" class="btn btn-sm btn-danger">
-			Remove
-		</button>
-	</form>
-</div>
+        <form method="post" asp-action="Remove" asp-controller="Product">
+		    <input type="hidden" name="id" value="@Model.Id"/>
+		    <button type="submit" class="btn btn-sm btn-danger">
+			    Remove
+		    </button>
+	    </form>
+    </td>
+</tr>

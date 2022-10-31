@@ -4,8 +4,18 @@
 
 @model ProductsViewModel
 
-@foreach (var p in Model.Products) 
-{
-    <partial name="ProductSummary" model="p" />
-}
-
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Products) 
+        {
+            <partial name="ProductSummary" model="p" />
+        }
+    </tbody>
+</table>
