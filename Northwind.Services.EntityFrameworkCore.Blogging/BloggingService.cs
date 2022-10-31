@@ -27,9 +27,9 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging
         public async IAsyncEnumerable<BlogArticle> GetBlogArticlesAsync(int offset, int limit)
         {
             var blogArticles = this.context.BlogArticles
-                    .Skip(offset)
-                    .Take(limit)
-                    .Select(b => this.mapper.Map<BlogArticle>(b));
+                .Skip(offset)
+                .Take(limit)
+                .Select(b => this.mapper.Map<BlogArticle>(b));
 
             await foreach (var blogArticle in blogArticles.AsAsyncEnumerable())
             {

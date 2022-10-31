@@ -60,9 +60,9 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         public async IAsyncEnumerable<Employee> GetEmployeesAsync(int offset, int limit)
         {
             var employees = this.context.Employees
-                    .Skip(offset)
-                    .Take(limit)
-                    .Select(e => this.mapper.Map<Employee>(e));
+                .Skip(offset)
+                .Take(limit)
+                .Select(e => this.mapper.Map<Employee>(e));
 
             await foreach (var employee in employees.AsAsyncEnumerable())
             {
