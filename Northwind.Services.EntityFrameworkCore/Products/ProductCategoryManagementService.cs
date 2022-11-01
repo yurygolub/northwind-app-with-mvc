@@ -40,7 +40,7 @@ namespace Northwind.Services.EntityFrameworkCore.Products
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DestroyCategoryAsync(int categoryId)
+        public async Task<bool> DeleteCategoryAsync(int categoryId)
         {
             var category = await this.context.Categories.FindAsync(categoryId);
             if (category != null)

@@ -40,7 +40,7 @@ namespace Northwind.Services.EntityFrameworkCore.Employees
         }
 
         /// <inheritdoc/>
-        public async Task<bool> DestroyEmployeeAsync(int employeeId)
+        public async Task<bool> DeleteEmployeeAsync(int employeeId)
         {
             var employee = await this.context.Employees.FindAsync(employeeId);
             if (employee != null)

@@ -36,7 +36,7 @@ namespace NorthwindMvcClient.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            if (!await this.managementService.DestroyProductAsync(id))
+            if (!await this.managementService.DeleteProductAsync(id))
             {
                 return this.NotFound();
             }
