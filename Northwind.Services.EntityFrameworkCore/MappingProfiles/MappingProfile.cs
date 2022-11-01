@@ -12,10 +12,12 @@ namespace Northwind.Services.EntityFrameworkCore.MappingProfiles
             this.CreateMap<Employee, EmployeeEntity>().ReverseMap();
             this.CreateMap<Product, ProductEntity>()
                 .ForMember(m => m.ProductId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(m => m.ProductName, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
             this.CreateMap<ProductCategory, CategoryEntity>()
                 .ForMember(m => m.CategoryId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(m => m.CategoryName, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
         }
     }
