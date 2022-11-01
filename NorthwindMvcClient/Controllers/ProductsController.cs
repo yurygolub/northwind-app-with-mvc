@@ -8,12 +8,12 @@ using NorthwindMvcClient.ViewModels;
 
 namespace NorthwindMvcClient.Controllers
 {
-    public class ProductController : Controller
+    public class ProductsController : Controller
     {
         private readonly IProductManagementService managementService;
         private readonly IMapper mapper;
 
-        public ProductController(IProductManagementService managementService, IMapper mapper)
+        public ProductsController(IProductManagementService managementService, IMapper mapper)
         {
             this.managementService = managementService ?? throw new ArgumentNullException(nameof(managementService));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
