@@ -52,7 +52,7 @@ namespace NorthwindMvcClient
             services
                 .AddTransient<IProductManagementService, ProductManagementService>()
                 .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
-                .AddAutoMapper(typeof(MappingProfile));
+                .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile));
         }
     }
 }

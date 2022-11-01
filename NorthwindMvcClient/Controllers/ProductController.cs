@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Northwind.Services.Products;
-using NorthwindMvcClient.Mappers;
 using NorthwindMvcClient.ViewModels;
 
 namespace NorthwindMvcClient.Controllers
@@ -11,10 +11,12 @@ namespace NorthwindMvcClient.Controllers
     public class ProductController : Controller
     {
         private readonly IProductManagementService managementService;
+        private readonly IMapper mapper;
 
-        public ProductController(IProductManagementService managementService)
+        public ProductController(IProductManagementService managementService, IMapper mapper)
         {
             this.managementService = managementService ?? throw new ArgumentNullException(nameof(managementService));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 10)
@@ -22,7 +24,7 @@ namespace NorthwindMvcClient.Controllers
             var products = new List<Models.Product>();
             await foreach (var item in this.managementService.GetProductsAsync(offset, limit))
             {
-                products.Add(ProductMapper.MapProduct(item));
+                products.Add(this.mapper.Map<Models.Product>(item));
             }
 
             return this.View(new ProductsViewModel
