@@ -9,15 +9,13 @@
     <tr>
         <th>ID</th>
         <th>Full name</th>
+        <th>Photo</th>
     </tr>
     </thead>
     <tbody>
         @foreach (var employee in Model.Employees)
         {
-            <tr>
-                <td>@employee.EmployeeID</td>
-                <td>@($"{employee.FirstName} {employee.LastName}")</td>
-            </tr>
+            <partial name="EmployeeSummary" model="employee"/>
         }
     </tbody>
 </table>

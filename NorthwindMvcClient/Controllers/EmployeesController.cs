@@ -24,7 +24,10 @@ namespace NorthwindMvcClient.Controllers
             var employees = new List<Models.Employee>();
             await foreach (var item in this.managementService.GetEmployeesAsync(offset, limit))
             {
-                employees.Add(this.mapper.Map<Models.Employee>(item));
+                var employee = this.mapper.Map<Models.Employee>(item);
+                employee.Photo = employee.Photo[78..];
+
+                employees.Add(employee);
             }
 
             return this.View(new EmployeesViewModel

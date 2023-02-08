@@ -1,0 +1,9 @@
+﻿@model Employee
+
+<tr>
+    <td>@Model.EmployeeID</td>
+    <td>@($"{Model.FirstName} {Model.LastName}")</td>
+    <td>
+        <img src="data:image;base64,@System.Convert.ToBase64String(Model.Photo)" />
+    </td>
+</tr>
