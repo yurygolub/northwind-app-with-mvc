@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog.Extensions.Logging;
 using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Context;
 using Northwind.Services.EntityFrameworkCore.Employees;
@@ -55,7 +56,8 @@ namespace NorthwindMvcClient
                 .AddTransient<IProductManagementService, ProductManagementService>()
                 .AddTransient<IEmployeeManagementService, EmployeeManagementService>()
                 .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
-                .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile));
+                .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile))
+                .AddLogging(builder => builder.AddNLog());
         }
     }
 }
