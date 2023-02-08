@@ -5,8 +5,19 @@
 ### Build and Run
 ```sh
 git clone https://github.com/yurygolub/northwind-app-with-mvc.git
+```
+
+```sh
 cd northwind-app-with-mvc\NorthwindMvcClient
+```
+
+```sh
 dotnet run
+```
+
+### Release
+```sh
+dotnet publish NorthwindMvcClient/NorthwindMvcClient.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --no-self-contained
 ```
 
 ## NorthwindApiApp
@@ -14,9 +25,21 @@ dotnet run
 ### Build and Run
 ```sh
 git clone https://github.com/yurygolub/northwind-app-with-mvc.git
+```
+
+```sh
 cd northwind-app-with-mvc\NorthwindApiApp
+```
+
+```sh
 dotnet run
 ```
+
+### Release
+```sh
+dotnet publish NorthwindApiApp/NorthwindApiApp.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --no-self-contained
+```
+
 ### API
 
 #### Products
@@ -131,10 +154,6 @@ Update JSON payload structure:
 | Read (all items) | GET       | /api/articles/{article-id}/comments      |
 | Update           | PUT       | /api/articles/{article-id}/comments/{id} |
 | Delete           | DELETE    | /api/articles/{article-id}/comments/{id} |
-
-### Change start mode
-use file \northwind-app-with-mvc\NorthwindApiApp\Properties\launchSettings.json
-set the "ASPNETCORE_ENVIRONMENT" environment variable to "Prod" to run in production mode
 
 ### Change services
 use following files to configure services
