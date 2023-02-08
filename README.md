@@ -169,7 +169,7 @@ set "Mode" to use one of the following service types
 #### Northwind
 before using local database services you have to create a database
 * create database using SQL script [instnwnd.sql](https://github.com/microsoft/sql-server-samples/blob/master/samples/databases/northwind-pubs/instnwnd.sql)
-* create stored procedures using this file: \northwind-app-with-mvc\Northwind.DataAccess.SqlServer\Sql scripts\dbo.CreaterProcedures.sql
+* create stored procedures using this file: \northwind-app-with-mvc\Northwind.DataAccess.SqlServer\Sql scripts\dbo.CreateProcedures.sql
 
 #### NorthwindBlogging
 
