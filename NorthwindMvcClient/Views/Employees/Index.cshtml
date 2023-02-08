@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Employees";
+}
+
+@model EmployeesViewModel
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Full name</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employees)
+        {
+            <tr>
+                <td>@employee.EmployeeID</td>
+                <td>@($"{employee.FirstName} {employee.LastName}")</td>
+            </tr>
+        }
+    </tbody>
+</table>

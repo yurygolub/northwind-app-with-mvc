@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Northwind.Services.Employees;
 using Northwind.Services.Products;
 
 namespace NorthwindMvcClient.MappingProfiles
@@ -8,6 +9,7 @@ namespace NorthwindMvcClient.MappingProfiles
         public MappingProfile()
         {
             this.CreateMap<Product, Models.Product>().ReverseMap();
+            this.CreateMap<Employee, Models.Employee>().ReverseMap();
         }
     }
 }
