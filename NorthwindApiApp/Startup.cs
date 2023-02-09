@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog.Extensions.Logging;
 
 #pragma warning disable SA1600
 
@@ -46,6 +47,7 @@ namespace NorthwindApiApp
             }
 
             services.AddControllers();
+            services.AddLogging(builder => builder.AddNLog());
         }
     }
 }
