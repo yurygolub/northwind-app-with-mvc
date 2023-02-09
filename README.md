@@ -17,7 +17,7 @@ dotnet run
 
 ### Release
 ```sh
-dotnet publish NorthwindMvcClient/NorthwindMvcClient.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --no-self-contained
+dotnet publish NorthwindMvcClient/NorthwindMvcClient.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --property:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
 ```
 
 ## NorthwindApiApp
@@ -37,7 +37,7 @@ dotnet run
 
 ### Release
 ```sh
-dotnet publish NorthwindApiApp/NorthwindApiApp.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --no-self-contained
+dotnet publish NorthwindApiApp/NorthwindApiApp.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --property:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
 ```
 
 ### API
