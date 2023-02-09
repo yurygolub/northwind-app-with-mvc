@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "ProductCategories";
+}
+
+@model ProductCategoriesViewModel
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Picture</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.ProductCategories)
+        {
+            <partial name="ProductCategorySummary" model="category"/>
+        }
+    </tbody>
+</table>

@@ -10,6 +10,7 @@ namespace NorthwindMvcClient.MappingProfiles
         {
             this.CreateMap<Product, Models.Product>().ReverseMap();
             this.CreateMap<Employee, Models.Employee>().ReverseMap();
+            this.CreateMap<ProductCategory, Models.ProductCategory>().ReverseMap();
         }
     }
 }

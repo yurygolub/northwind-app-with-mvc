@@ -54,6 +54,7 @@ namespace NorthwindMvcClient
             services.AddControllersWithViews();
             services
                 .AddTransient<IProductManagementService, ProductManagementService>()
+                .AddScoped<IProductCategoryManagementService, ProductCategoryManagementService>()
                 .AddTransient<IEmployeeManagementService, EmployeeManagementService>()
                 .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
                 .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile))
