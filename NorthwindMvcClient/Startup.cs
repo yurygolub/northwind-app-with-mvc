@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ namespace NorthwindMvcClient
     {
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration;
+            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         public IConfiguration Configuration { get; }
@@ -53,9 +54,9 @@ namespace NorthwindMvcClient
         {
             services.AddControllersWithViews();
             services
-                .AddTransient<IProductManagementService, ProductManagementService>()
+                .AddScoped<IProductManagementService, ProductManagementService>()
                 .AddScoped<IProductCategoryManagementService, ProductCategoryManagementService>()
-                .AddTransient<IEmployeeManagementService, EmployeeManagementService>()
+                .AddScoped<IEmployeeManagementService, EmployeeManagementService>()
                 .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
                 .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile))
                 .AddLogging(builder => builder.AddNLog());
