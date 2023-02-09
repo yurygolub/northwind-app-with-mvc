@@ -8,16 +8,15 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging.Context
 {
     public class DesignTimeBloggingContextFactory : IDesignTimeDbContextFactory<BloggingContext>
     {
-        private readonly ILogger logger;
+        private readonly ILogger<BloggingContext> logger;
 
         public DesignTimeBloggingContextFactory()
         {
         }
 
-        public DesignTimeBloggingContextFactory(ILoggerFactory loggerFactory)
+        public DesignTimeBloggingContextFactory(ILogger<BloggingContext> logger)
         {
-            _ = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            this.logger = loggerFactory.CreateLogger<BloggingContext>();
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public BloggingContext CreateDbContext(string[] args)
