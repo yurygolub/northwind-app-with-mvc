@@ -25,7 +25,10 @@ namespace NorthwindMvcClient.Controllers
             await foreach (var item in this.managementService.GetEmployeesAsync(offset, limit))
             {
                 var employee = this.mapper.Map<Models.Employee>(item);
-                employee.Photo = employee.Photo[78..];
+                if (employee.Photo?.Length != 0)
+                {
+                    employee.Photo = employee.Photo[78..];
+                }
 
                 employees.Add(employee);
             }

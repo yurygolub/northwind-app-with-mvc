@@ -25,7 +25,10 @@ namespace NorthwindMvcClient.Controllers
             await foreach (var item in this.managementService.GetCategoriesAsync(offset, limit))
             {
                 var category = this.mapper.Map<Models.ProductCategory>(item);
-                category.Picture = category.Picture[78..];
+                if (category.Picture?.Length != 0)
+                {
+                    category.Picture = category.Picture[78..];
+                }
 
                 categories.Add(category);
             }
