@@ -5,12 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
-using Northwind.Services.Employees;
-using Northwind.Services.EntityFrameworkCore.Context;
-using Northwind.Services.EntityFrameworkCore.Employees;
-using Northwind.Services.EntityFrameworkCore.MappingProfiles;
-using Northwind.Services.EntityFrameworkCore.Products;
-using Northwind.Services.Products;
 
 namespace NorthwindMvcClient
 {
@@ -52,13 +46,20 @@ namespace NorthwindMvcClient
 
         public void ConfigureServices(IServiceCollection services)
         {
+            switch (this.Configuration["Mode"])
+            {
+                case "Sql":
+                    services.AddSqlServices(this.Configuration);
+                    break;
+
+                case "Ef":
+                default:
+                    services.AddEfServices(this.Configuration);
+                    break;
+            }
+
             services.AddControllersWithViews();
             services
-                .AddScoped<IProductManagementService, ProductManagementService>()
-                .AddScoped<IProductCategoryManagementService, ProductCategoryManagementService>()
-                .AddScoped<IEmployeeManagementService, EmployeeManagementService>()
-                .AddScoped(s => new NorthwindContext(this.Configuration.GetConnectionString("SqlConnection")))
-                .AddAutoMapper(typeof(MappingProfile), typeof(MappingProfiles.MappingProfile))
                 .AddLogging(builder => builder.AddNLog());
         }
     }
