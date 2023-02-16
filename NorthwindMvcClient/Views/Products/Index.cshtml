@@ -19,3 +19,29 @@
         }
     </tbody>
 </table>
+
+@if (Model.PageViewModel.Offset > 0)
+{
+    <a class="btn btn-info" href="/Products/Index?offset=@(Model.PageViewModel.Offset > Model.PageViewModel.Limit ? Model.PageViewModel.Offset - Model.PageViewModel.Limit : 0)">
+        Previous page
+    </a>
+}
+else
+{
+    <a class="btn btn-info disabled" href="">
+        Previous page
+    </a>
+}
+
+@if (Model.PageViewModel.Count >= Model.PageViewModel.Limit)
+{
+    <a class="btn btn-info" href="/Products/Index?offset=@(Model.PageViewModel.Offset + Model.PageViewModel.Limit)">
+        Next page
+    </a>
+}
+else
+{
+    <a class="btn btn-info disabled" href="">
+        Next page
+    </a>
+}

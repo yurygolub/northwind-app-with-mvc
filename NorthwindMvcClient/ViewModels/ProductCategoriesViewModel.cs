@@ -6,5 +6,7 @@ namespace NorthwindMvcClient.ViewModels
     public class ProductCategoriesViewModel
     {
         public IEnumerable<ProductCategory> ProductCategories { get; set; }
+
+        public PageViewModel PageViewModel { get; set; }
     }
 }

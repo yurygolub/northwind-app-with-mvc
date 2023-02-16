@@ -19,10 +19,13 @@ namespace NorthwindMvcClient.Controllers
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 10)
+        public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 5)
         {
             var employees = new List<Models.Employee>();
-            await foreach (var item in this.managementService.GetEmployeesAsync(offset, limit))
+
+            IAsyncEnumerable<Employee> result = this.managementService.GetEmployeesAsync(offset, limit);
+            int count = 0;
+            await foreach (var item in result)
             {
                 var employee = this.mapper.Map<Models.Employee>(item);
                 if (employee.Photo?.Length != 0)
@@ -31,11 +34,18 @@ namespace NorthwindMvcClient.Controllers
                 }
 
                 employees.Add(employee);
+                count++;
             }
 
             return this.View(new EmployeesViewModel
             {
                 Employees = employees,
+                PageViewModel = new PageViewModel
+                {
+                    Offset = offset,
+                    Limit = limit,
+                    Count = count,
+                },
             });
         }
     }

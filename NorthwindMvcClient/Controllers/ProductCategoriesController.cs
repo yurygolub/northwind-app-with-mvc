@@ -19,10 +19,13 @@ namespace NorthwindMvcClient.Controllers
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 10)
+        public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 5)
         {
             var categories = new List<Models.ProductCategory>();
-            await foreach (var item in this.managementService.GetCategoriesAsync(offset, limit))
+
+            IAsyncEnumerable<ProductCategory> result = this.managementService.GetCategoriesAsync(offset, limit);
+            int count = 0;
+            await foreach (var item in result)
             {
                 var category = this.mapper.Map<Models.ProductCategory>(item);
                 if (category.Picture?.Length != 0)
@@ -31,11 +34,18 @@ namespace NorthwindMvcClient.Controllers
                 }
 
                 categories.Add(category);
+                count++;
             }
 
             return this.View(new ProductCategoriesViewModel
             {
                 ProductCategories = categories,
+                PageViewModel = new PageViewModel
+                {
+                    Offset = offset,
+                    Limit = limit,
+                    Count = count,
+                },
             });
         }
     }

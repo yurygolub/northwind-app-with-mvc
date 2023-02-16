@@ -21,15 +21,27 @@ namespace NorthwindMvcClient.Controllers
 
         public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 10)
         {
+            this.ViewBag.CurrentFilter = "text for search";
+
             var products = new List<Models.Product>();
-            await foreach (var item in this.managementService.GetProductsAsync(offset, limit))
+
+            IAsyncEnumerable<Product> result = this.managementService.GetProductsAsync(offset, limit);
+            int count = 0;
+            await foreach (var item in result)
             {
                 products.Add(this.mapper.Map<Models.Product>(item));
+                count++;
             }
 
             return this.View(new ProductsViewModel
             {
                 Products = products,
+                PageViewModel = new PageViewModel
+                {
+                    Offset = offset,
+                    Limit = limit,
+                    Count = count,
+                },
             });
         }
 
