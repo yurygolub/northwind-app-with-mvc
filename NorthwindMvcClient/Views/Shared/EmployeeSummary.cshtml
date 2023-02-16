@@ -2,7 +2,13 @@
 
 <tr>
     <td>@Model.EmployeeID</td>
-    <td>@($"{Model.FirstName} {Model.LastName}")</td>
+    <td>@($"{Model.TitleOfCourtesy} {Model.FirstName} {Model.LastName}")</td>
+    <td>@Model.Title</td>
+    <td>@($"{Model.BirthDate.Value:yyyy-MMM-dd}")</td>
+    <td>@($"{Model.HireDate.Value:yyyy-MMM-dd}")</td>
+    <td>@($"{Model.Address}, {Model.City}, {Model.Region}, {Model.PostalCode}, {Model.Country}")</td>
+    <td>@($"{Model.Extension} {Model.HomePhone}")</td>
+    <td>@Model.Notes</td>
     <td>
         <img src="data:image;base64,@System.Convert.ToBase64String(Model.Photo)" />
     </td>

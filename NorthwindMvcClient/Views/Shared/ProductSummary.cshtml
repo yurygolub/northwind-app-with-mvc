@@ -3,7 +3,12 @@
 <tr>
     <td>@Model.Id</td>
     <td>@Model.Name</td>
+    <td>@Model.QuantityPerUnit</td>
     <td>@(((decimal)Model.UnitPrice).ToString("c"))</td>
+    <td>@Model.UnitsInStock</td>
+    <td>@Model.UnitsOnOrder</td>
+    <td>@Model.ReorderLevel</td>
+    <td>@Model.Discontinued</td>
     <td>
         <NavLink class="btn btn-warning btn-sm" href="">
             Edit
