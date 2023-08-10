@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 
-#pragma warning disable SA1600
-
 namespace NorthwindApiApp
 {
     public class Startup

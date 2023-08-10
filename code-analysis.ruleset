@@ -10,9 +10,11 @@
     <Rule Id="CA1303" Action="None" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA0001" Action="None" />
     <Rule Id="SA1200" Action="Error" />
     <Rule Id="SA1400" Action="Error" />
     <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
     <Rule Id="SA1633" Action="None" />
   </Rules>
 </RuleSet>

@@ -7,8 +7,6 @@ using Northwind.Services.Employees;
 using Northwind.Services.Products;
 using NorthwindApiApp.Models;
 
-#pragma warning disable SA1600
-
 namespace NorthwindApiApp.Controllers
 {
     [ApiController]

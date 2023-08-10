@@ -59,8 +59,7 @@ namespace NorthwindMvcClient
             }
 
             services.AddControllersWithViews();
-            services
-                .AddLogging(builder => builder.AddNLog());
+            services.AddLogging(builder => builder.AddNLog());
         }
     }
 }

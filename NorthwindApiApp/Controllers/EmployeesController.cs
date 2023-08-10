@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Northwind.Services.Employees;
 
-#pragma warning disable SA1600
-
 namespace NorthwindApiApp.Controllers
 {
     [ApiController]

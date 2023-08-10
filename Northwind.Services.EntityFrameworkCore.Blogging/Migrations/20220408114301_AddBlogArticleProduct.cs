@@ -13,7 +13,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging.Migrations
                     blog_article_product_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     blog_article_id = table.Column<int>(type: "int", nullable: false),
-                    product_id = table.Column<int>(type: "int", nullable: false)
+                    product_id = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {

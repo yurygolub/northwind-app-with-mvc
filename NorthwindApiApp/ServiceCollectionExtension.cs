@@ -13,8 +13,6 @@ using Northwind.Services.Products;
 using DataAccess = Northwind.Services.DataAccess;
 using EntityFramework = Northwind.Services.EntityFrameworkCore;
 
-#pragma warning disable SA1600
-
 namespace NorthwindApiApp
 {
     public static class ServiceCollectionExtension

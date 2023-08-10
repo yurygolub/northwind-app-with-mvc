@@ -16,7 +16,7 @@ namespace Northwind.Services.EntityFrameworkCore.Blogging.Migrations
                     text = table.Column<string>(type: "ntext", nullable: false),
                     posted = table.Column<DateTime>(type: "datetime", nullable: false),
                     blog_article_id = table.Column<int>(type: "int", nullable: false),
-                    author_id = table.Column<int>(type: "int", nullable: false)
+                    author_id = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {

@@ -6,7 +6,6 @@ namespace Northwind.DataAccess.Employees
     /// <summary>
     /// Represents a TO for Northwind employees.
     /// </summary>
-
     [DebuggerDisplay("Id={Id}, Name={Name}")]
     public class EmployeeTransferObject
     {
