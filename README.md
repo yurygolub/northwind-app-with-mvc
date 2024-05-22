@@ -98,9 +98,9 @@ Create JSON payload structure:
 
 ```json
 {
-	"title": "Gourmet Quality: Mascarpone Fabioli",
-	"text": "A text that describes Mascarpone Fabioli...",
-	"authorId": 1
+    "title": "Gourmet Quality: Mascarpone Fabioli",
+    "text": "A text that describes Mascarpone Fabioli...",
+    "authorId": 1
 }
 ```
 
@@ -108,13 +108,13 @@ Read (all items) JSON response structure:
 
 ```json
 [
-	{
-		"id": 1,
-		"title": "Gourmet Quality: Mascarpone Fabioli",
-		"posted": "2012-04-23T18:25:43.511Z",
-		"authorId": 1,
-		"authorName": "Nancy Davolio, Sales Representative",
-	}
+    {
+        "id": 1,
+        "title": "Gourmet Quality: Mascarpone Fabioli",
+        "posted": "2012-04-23T18:25:43.511Z",
+        "authorId": 1,
+        "authorName": "Nancy Davolio, Sales Representative",
+    }
 ]
 ```
 
@@ -122,12 +122,12 @@ Read (item) JSON response structure:
 
 ```json
 {
-	"id": 1,
-	"title": "Gourmet Quality: Mascarpone Fabioli",
-	"posted": "2012-04-23T18:25:43.511Z",
-	"authorId": 1,
-	"authorName": "Nancy Davolio, Sales Representative",
-	"text": "A text that describes Mascarpone Fabioli..."
+    "id": 1,
+    "title": "Gourmet Quality: Mascarpone Fabioli",
+    "posted": "2012-04-23T18:25:43.511Z",
+    "authorId": 1,
+    "authorName": "Nancy Davolio, Sales Representative",
+    "text": "A text that describes Mascarpone Fabioli..."
 }
 ```
 
@@ -135,8 +135,8 @@ Update JSON payload structure:
 
 ```json
 {
-	"title": "Gourmet Quality: Mascarpone Fabioli",
-	"text": "A text that describes Mascarpone Fabioli..."
+    "title": "Gourmet Quality: Mascarpone Fabioli",
+    "text": "A text that describes Mascarpone Fabioli..."
 }
 ```
 
