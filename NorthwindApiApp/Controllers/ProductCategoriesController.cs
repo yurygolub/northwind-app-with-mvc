@@ -4,100 +4,99 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Northwind.Services.Products;
 
-namespace NorthwindApiApp.Controllers
+namespace NorthwindApiApp.Controllers;
+
+[ApiController]
+[Route("api/categories")]
+public class ProductCategoriesController : ControllerBase
 {
-    [ApiController]
-    [Route("api/categories")]
-    public class ProductCategoriesController : ControllerBase
+    private readonly IProductCategoryManagementService managementService;
+    private readonly IProductCategoryPicturesService picturesService;
+
+    public ProductCategoriesController(IProductCategoryManagementService managementService, IProductCategoryPicturesService picturesService)
     {
-        private readonly IProductCategoryManagementService managementService;
-        private readonly IProductCategoryPicturesService picturesService;
+        this.managementService = managementService ?? throw new ArgumentNullException(nameof(managementService));
+        this.picturesService = picturesService ?? throw new ArgumentNullException(nameof(picturesService));
+    }
 
-        public ProductCategoriesController(IProductCategoryManagementService managementService, IProductCategoryPicturesService picturesService)
+    [HttpGet]
+    public IActionResult GetProductCategories([FromQuery] int offset = 0, [FromQuery] int limit = 10)
+    {
+        return this.Ok(this.managementService.GetCategoriesAsync(offset, limit));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProductCategoryAsync(int id)
+    {
+        var productCategory = await this.managementService.GetCategoryAsync(id);
+        if (productCategory is null)
         {
-            this.managementService = managementService ?? throw new ArgumentNullException(nameof(managementService));
-            this.picturesService = picturesService ?? throw new ArgumentNullException(nameof(picturesService));
+            return this.NotFound();
         }
 
-        [HttpGet]
-        public IActionResult GetProductCategories([FromQuery] int offset = 0, [FromQuery] int limit = 10)
+        return this.Ok(productCategory);
+    }
+
+    [HttpGet("{id}/picture")]
+    public async Task<IActionResult> GetProductCategoryPictureAsync(int id)
+    {
+        var picture = await this.picturesService.GetProductCategoryPictureAsync(id);
+        if (picture is null)
         {
-            return this.Ok(this.managementService.GetCategoriesAsync(offset, limit));
+            return this.NotFound();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductCategoryAsync(int id)
-        {
-            var productCategory = await this.managementService.GetCategoryAsync(id);
-            if (productCategory is null)
-            {
-                return this.NotFound();
-            }
+        return this.File(picture, "image/bmp");
+    }
 
-            return this.Ok(productCategory);
+    [HttpPost]
+    public async Task<IActionResult> CreateProductCategoryAsync([FromBody] ProductCategory productCategory)
+    {
+        await this.managementService.CreateCategoryAsync(productCategory);
+        return this.Ok();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProductCategoryAsync(int id)
+    {
+        if (!await this.managementService.DeleteCategoryAsync(id))
+        {
+            return this.NotFound();
         }
 
-        [HttpGet("{id}/picture")]
-        public async Task<IActionResult> GetProductCategoryPictureAsync(int id)
-        {
-            var picture = await this.picturesService.GetProductCategoryPictureAsync(id);
-            if (picture is null)
-            {
-                return this.NotFound();
-            }
+        return this.NoContent();
+    }
 
-            return this.File(picture, "image/bmp");
+    [HttpDelete("{id}/picture")]
+    public async Task<IActionResult> DeleteProductCategoryPictureAsync(int id)
+    {
+        if (!await this.picturesService.DeleteProductCategoryPictureAsync(id))
+        {
+            return this.NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProductCategoryAsync([FromBody] ProductCategory productCategory)
+        return this.NoContent();
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProductCategoryAsync(int id, [FromBody] ProductCategory productCategory)
+    {
+        if (!await this.managementService.UpdateCategoryAsync(id, productCategory))
         {
-            await this.managementService.CreateCategoryAsync(productCategory);
-            return this.Ok();
+            return this.NotFound();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProductCategoryAsync(int id)
-        {
-            if (!await this.managementService.DeleteCategoryAsync(id))
-            {
-                return this.NotFound();
-            }
+        return this.NoContent();
+    }
 
-            return this.NoContent();
+    [HttpPut("{id}/picture")]
+    public async Task<IActionResult> UpdateProductCategoryPictureAsync(int id, [FromBody] Stream stream)
+    {
+        if (!await this.picturesService.UpdateProductCategoryPictureAsync(id, stream))
+        {
+            return this.NotFound();
         }
 
-        [HttpDelete("{id}/picture")]
-        public async Task<IActionResult> DeleteProductCategoryPictureAsync(int id)
-        {
-            if (!await this.picturesService.DeleteProductCategoryPictureAsync(id))
-            {
-                return this.NotFound();
-            }
-
-            return this.NoContent();
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductCategoryAsync(int id, [FromBody] ProductCategory productCategory)
-        {
-            if (!await this.managementService.UpdateCategoryAsync(id, productCategory))
-            {
-                return this.NotFound();
-            }
-
-            return this.NoContent();
-        }
-
-        [HttpPut("{id}/picture")]
-        public async Task<IActionResult> UpdateProductCategoryPictureAsync(int id, [FromBody] Stream stream)
-        {
-            if (!await this.picturesService.UpdateProductCategoryPictureAsync(id, stream))
-            {
-                return this.NotFound();
-            }
-
-            return this.NoContent();
-        }
+        return this.NoContent();
     }
 }

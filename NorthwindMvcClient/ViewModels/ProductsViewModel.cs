@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using NorthwindMvcClient.Models;
 
-namespace NorthwindMvcClient.ViewModels
-{
-    public class ProductsViewModel
-    {
-        public IEnumerable<Product> Products { get; set; }
+namespace NorthwindMvcClient.ViewModels;
 
-        public PageViewModel PageViewModel { get; set; }
-    }
+public class ProductsViewModel
+{
+    public IEnumerable<Product> Products { get; set; }
+
+    public PageViewModel PageViewModel { get; set; }
 }

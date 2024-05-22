@@ -5,40 +5,39 @@ using Northwind.DataAccess.Products;
 using Northwind.DataAccess.SqlServer.Employees;
 using Northwind.DataAccess.SqlServer.Products;
 
-namespace Northwind.DataAccess.SqlServer
+namespace Northwind.DataAccess.SqlServer;
+
+/// <summary>
+/// Represents an abstract factory for creating Northwind DAO for SQL Server.
+/// </summary>
+public sealed class SqlServerDataAccessFactory : NorthwindDataAccessFactory
 {
+    private readonly SqlConnection sqlConnection;
+
     /// <summary>
-    /// Represents an abstract factory for creating Northwind DAO for SQL Server.
+    /// Initializes a new instance of the <see cref="SqlServerDataAccessFactory"/> class.
     /// </summary>
-    public sealed class SqlServerDataAccessFactory : NorthwindDataAccessFactory
+    /// <param name="sqlConnection">A database connection to SQL Server.</param>
+    public SqlServerDataAccessFactory(SqlConnection sqlConnection)
     {
-        private readonly SqlConnection sqlConnection;
+        this.sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SqlServerDataAccessFactory"/> class.
-        /// </summary>
-        /// <param name="sqlConnection">A database connection to SQL Server.</param>
-        public SqlServerDataAccessFactory(SqlConnection sqlConnection)
-        {
-            this.sqlConnection = sqlConnection ?? throw new ArgumentNullException(nameof(sqlConnection));
-        }
+    /// <inheritdoc/>
+    public override IProductCategoryDataAccessObject GetProductCategoryDataAccessObject()
+    {
+        return new ProductCategorySqlServerDataAccessObject(this.sqlConnection);
+    }
 
-        /// <inheritdoc/>
-        public override IProductCategoryDataAccessObject GetProductCategoryDataAccessObject()
-        {
-            return new ProductCategorySqlServerDataAccessObject(this.sqlConnection);
-        }
+    /// <inheritdoc/>
+    public override IProductDataAccessObject GetProductDataAccessObject()
+    {
+        return new ProductSqlServerDataAccessObject(this.sqlConnection);
+    }
 
-        /// <inheritdoc/>
-        public override IProductDataAccessObject GetProductDataAccessObject()
-        {
-            return new ProductSqlServerDataAccessObject(this.sqlConnection);
-        }
-
-        /// <inheritdoc />
-        public override IEmployeeDataAccessObject GetEmployeeDataAccessObject()
-        {
-            return new EmployeeSqlServerDataAccessObject(this.sqlConnection);
-        }
+    /// <inheritdoc />
+    public override IEmployeeDataAccessObject GetEmployeeDataAccessObject()
+    {
+        return new EmployeeSqlServerDataAccessObject(this.sqlConnection);
     }
 }

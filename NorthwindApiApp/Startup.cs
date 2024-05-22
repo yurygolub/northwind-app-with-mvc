@@ -6,47 +6,46 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 
-namespace NorthwindApiApp
+namespace NorthwindApiApp;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            app.UseDeveloperExceptionPage();
         }
 
-        public IConfiguration Configuration { get; }
+        app.UseRouting();
 
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        app.UseEndpoints(endpoints =>
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            endpoints.MapControllers();
+        });
+    }
 
-            app.UseRouting();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        switch (this.Configuration["Mode"])
+        {
+            case "Sql":
+                services.AddSqlServices(this.Configuration);
+                break;
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            case "Ef":
+                services.AddEfServices(this.Configuration);
+                break;
         }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            switch (this.Configuration["Mode"])
-            {
-                case "Sql":
-                    services.AddSqlServices(this.Configuration);
-                    break;
-
-                case "Ef":
-                    services.AddEfServices(this.Configuration);
-                    break;
-            }
-
-            services.AddControllers();
-            services.AddLogging(builder => builder.AddNLog());
-        }
+        services.AddControllers();
+        services.AddLogging(builder => builder.AddNLog());
     }
 }

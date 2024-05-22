@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Northwind.Services.Blogging
+namespace Northwind.Services.Blogging;
+
+public class BlogComment
 {
-    public class BlogComment
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Text { get; set; }
+    public string Text { get; set; }
 
-        public DateTime Posted { get; set; }
+    public DateTime Posted { get; set; }
 
-        public int BlogArticleId { get; set; }
+    public int BlogArticleId { get; set; }
 
-        public int AuthorId { get; set; }
-    }
+    public int AuthorId { get; set; }
 }

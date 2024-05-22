@@ -6,60 +6,59 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 
-namespace NorthwindMvcClient
+namespace NorthwindMvcClient;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
 
-        public IConfiguration Configuration { get; }
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
+            endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+        });
+    }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        switch (this.Configuration["Mode"])
+        {
+            case "Sql":
+                services.AddSqlServices(this.Configuration);
+                break;
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            case "Ef":
+            default:
+                services.AddEfServices(this.Configuration);
+                break;
         }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            switch (this.Configuration["Mode"])
-            {
-                case "Sql":
-                    services.AddSqlServices(this.Configuration);
-                    break;
-
-                case "Ef":
-                default:
-                    services.AddEfServices(this.Configuration);
-                    break;
-            }
-
-            services.AddControllersWithViews();
-            services.AddLogging(builder => builder.AddNLog());
-        }
+        services.AddControllersWithViews();
+        services.AddLogging(builder => builder.AddNLog());
     }
 }

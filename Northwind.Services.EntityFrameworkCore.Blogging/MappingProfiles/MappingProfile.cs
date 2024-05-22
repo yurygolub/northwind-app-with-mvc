@@ -2,14 +2,13 @@
 using Northwind.Services.Blogging;
 using Northwind.Services.EntityFrameworkCore.Blogging.Entities;
 
-namespace Northwind.Services.EntityFrameworkCore.Blogging.MappingProfiles
+namespace Northwind.Services.EntityFrameworkCore.Blogging.MappingProfiles;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            this.CreateMap<BlogArticle, BlogArticleEntity>().ReverseMap();
-            this.CreateMap<BlogComment, BlogCommentEntity>().ReverseMap();
-        }
+        this.CreateMap<BlogArticle, BlogArticleEntity>().ReverseMap();
+        this.CreateMap<BlogComment, BlogCommentEntity>().ReverseMap();
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace NorthwindMvcClient.ViewModels
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+﻿namespace NorthwindMvcClient.ViewModels;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
-    }
+public class ErrorViewModel
+{
+    public string RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(this.RequestId);
 }

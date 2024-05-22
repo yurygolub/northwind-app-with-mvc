@@ -6,97 +6,94 @@ using Northwind.DataAccess;
 using Northwind.DataAccess.Products;
 using Northwind.Services.Products;
 
-#pragma warning disable S4457
+namespace Northwind.Services.DataAccess.Products;
 
-namespace Northwind.Services.DataAccess.Products
+/// <summary>
+/// Represents a stub for a product management service.
+/// </summary>
+public sealed class ProductManagementService : IProductManagementService
 {
+    private readonly IProductDataAccessObject dataAccessObject;
+    private readonly IMapper mapper;
+
     /// <summary>
-    /// Represents a stub for a product management service.
+    /// Initializes a new instance of the <see cref="ProductManagementService"/> class.
     /// </summary>
-    public sealed class ProductManagementService : IProductManagementService
+    /// <param name="northwindDataAccessFactory">Factory for creating Northwind DAO.</param>
+    /// <param name="mapper">Mapper for entity mapping.</param>
+    public ProductManagementService(NorthwindDataAccessFactory northwindDataAccessFactory, IMapper mapper)
     {
-        private readonly IProductDataAccessObject dataAccessObject;
-        private readonly IMapper mapper;
+        _ = northwindDataAccessFactory ?? throw new ArgumentNullException(nameof(northwindDataAccessFactory));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProductManagementService"/> class.
-        /// </summary>
-        /// <param name="northwindDataAccessFactory">Factory for creating Northwind DAO.</param>
-        /// <param name="mapper">Mapper for entity mapping.</param>
-        public ProductManagementService(NorthwindDataAccessFactory northwindDataAccessFactory, IMapper mapper)
+        this.dataAccessObject = northwindDataAccessFactory.GetProductDataAccessObject();
+    }
+
+    /// <inheritdoc/>
+    public async Task<int> CreateProductAsync(Product product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
+
+        return await this.dataAccessObject.InsertProductAsync(this.mapper.Map<ProductTransferObject>(product));
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> DeleteProductAsync(int productId)
+    {
+        return await this.dataAccessObject.DeleteProductAsync(productId);
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<Product> GetProductsByNameAsync(IEnumerable<string> names)
+    {
+        _ = names ?? throw new ArgumentNullException(nameof(names));
+
+        var products = this.dataAccessObject.SelectProductsByNameAsync(names);
+        await foreach (var product in products)
         {
-            _ = northwindDataAccessFactory ?? throw new ArgumentNullException(nameof(northwindDataAccessFactory));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
-            this.dataAccessObject = northwindDataAccessFactory.GetProductDataAccessObject();
+            yield return this.mapper.Map<Product>(product);
         }
+    }
 
-        /// <inheritdoc/>
-        public async Task<int> CreateProductAsync(Product product)
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<Product> GetProductsAsync(int offset, int limit)
+    {
+        var products = this.dataAccessObject.SelectProductsAsync(offset, limit);
+        await foreach (var product in products)
         {
-            _ = product ?? throw new ArgumentNullException(nameof(product));
-
-            return await this.dataAccessObject.InsertProductAsync(this.mapper.Map<ProductTransferObject>(product));
+            yield return this.mapper.Map<Product>(product);
         }
+    }
 
-        /// <inheritdoc/>
-        public async Task<bool> DeleteProductAsync(int productId)
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<Product> GetProductsForCategoryAsync(int categoryId)
+    {
+        var products = this.dataAccessObject.SelectProductByCategoryAsync(new[] { categoryId });
+        await foreach (var product in products)
         {
-            return await this.dataAccessObject.DeleteProductAsync(productId);
+            yield return this.mapper.Map<Product>(product);
         }
+    }
 
-        /// <inheritdoc/>
-        public async IAsyncEnumerable<Product> GetProductsByNameAsync(IEnumerable<string> names)
+    /// <inheritdoc/>
+    public async Task<Product> GetProductAsync(int productId)
+    {
+        try
         {
-            _ = names ?? throw new ArgumentNullException(nameof(names));
-
-            var products = this.dataAccessObject.SelectProductsByNameAsync(names);
-            await foreach (var product in products)
-            {
-                yield return this.mapper.Map<Product>(product);
-            }
+            var productTransferObject = await this.dataAccessObject.FindProductAsync(productId);
+            return this.mapper.Map<Product>(productTransferObject);
         }
-
-        /// <inheritdoc/>
-        public async IAsyncEnumerable<Product> GetProductsAsync(int offset, int limit)
+        catch (ProductNotFoundException)
         {
-            var products = this.dataAccessObject.SelectProductsAsync(offset, limit);
-            await foreach (var product in products)
-            {
-                yield return this.mapper.Map<Product>(product);
-            }
+            return null;
         }
+    }
 
-        /// <inheritdoc/>
-        public async IAsyncEnumerable<Product> GetProductsForCategoryAsync(int categoryId)
-        {
-            var products = this.dataAccessObject.SelectProductByCategoryAsync(new[] { categoryId });
-            await foreach (var product in products)
-            {
-                yield return this.mapper.Map<Product>(product);
-            }
-        }
+    /// <inheritdoc/>
+    public async Task<bool> UpdateProductAsync(int productId, Product product)
+    {
+        _ = product ?? throw new ArgumentNullException(nameof(product));
 
-        /// <inheritdoc/>
-        public async Task<Product> GetProductAsync(int productId)
-        {
-            try
-            {
-                var productTransferObject = await this.dataAccessObject.FindProductAsync(productId);
-                return this.mapper.Map<Product>(productTransferObject);
-            }
-            catch (ProductNotFoundException)
-            {
-                return null;
-            }
-        }
-
-        /// <inheritdoc/>
-        public async Task<bool> UpdateProductAsync(int productId, Product product)
-        {
-            _ = product ?? throw new ArgumentNullException(nameof(product));
-
-            return await this.dataAccessObject.UpdateProductAsync(productId, this.mapper.Map<ProductTransferObject>(product));
-        }
+        return await this.dataAccessObject.UpdateProductAsync(productId, this.mapper.Map<ProductTransferObject>(product));
     }
 }

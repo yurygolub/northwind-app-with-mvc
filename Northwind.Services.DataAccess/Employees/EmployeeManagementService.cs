@@ -6,76 +6,75 @@ using Northwind.DataAccess;
 using Northwind.DataAccess.Employees;
 using Northwind.Services.Employees;
 
-namespace Northwind.Services.DataAccess.Employees
+namespace Northwind.Services.DataAccess.Employees;
+
+/// <summary>
+/// Represents a management service for employees.
+/// </summary>
+public class EmployeeManagementService : IEmployeeManagementService
 {
+    private readonly IEmployeeDataAccessObject dataAccessObject;
+    private readonly IMapper mapper;
+
     /// <summary>
-    /// Represents a management service for employees.
+    /// Initializes a new instance of the <see cref="EmployeeManagementService"/> class.
     /// </summary>
-    public class EmployeeManagementService : IEmployeeManagementService
+    /// <param name="northwindDataAccessFactory">Factory for creating Northwind DAO.</param>
+    /// <param name="mapper">Mapper for entity mapping.</param>
+    public EmployeeManagementService(NorthwindDataAccessFactory northwindDataAccessFactory, IMapper mapper)
     {
-        private readonly IEmployeeDataAccessObject dataAccessObject;
-        private readonly IMapper mapper;
+        _ = northwindDataAccessFactory ?? throw new ArgumentNullException(nameof(northwindDataAccessFactory));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeManagementService"/> class.
-        /// </summary>
-        /// <param name="northwindDataAccessFactory">Factory for creating Northwind DAO.</param>
-        /// <param name="mapper">Mapper for entity mapping.</param>
-        public EmployeeManagementService(NorthwindDataAccessFactory northwindDataAccessFactory, IMapper mapper)
+        this.dataAccessObject = northwindDataAccessFactory.GetEmployeeDataAccessObject();
+    }
+
+    /// <inheritdoc/>
+    public async Task<int> CreateEmployeeAsync(Employee employee)
+    {
+        _ = employee ?? throw new ArgumentNullException(nameof(employee));
+
+        return await this.dataAccessObject.InsertEmployeeAsync(
+            this.mapper.Map<EmployeeTransferObject>(employee));
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> DeleteEmployeeAsync(int employeeId)
+    {
+        return await this.dataAccessObject.DeleteEmployeeAsync(employeeId);
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<Employee> GetEmployeesAsync(int offset, int limit)
+    {
+        var employees = this.dataAccessObject.SelectEmployeesAsync(offset, limit);
+        await foreach (var employee in employees)
         {
-            _ = northwindDataAccessFactory ?? throw new ArgumentNullException(nameof(northwindDataAccessFactory));
-            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-
-            this.dataAccessObject = northwindDataAccessFactory.GetEmployeeDataAccessObject();
+            yield return this.mapper.Map<Employee>(employee);
         }
+    }
 
-        /// <inheritdoc/>
-        public async Task<int> CreateEmployeeAsync(Employee employee)
+    /// <inheritdoc/>
+    public async Task<Employee> GetEmployeeAsync(int employeeId)
+    {
+        try
         {
-            _ = employee ?? throw new ArgumentNullException(nameof(employee));
-
-            return await this.dataAccessObject.InsertEmployeeAsync(
-                this.mapper.Map<EmployeeTransferObject>(employee));
+            var employeeTransferObject = await this.dataAccessObject.FindEmployeeAsync(employeeId);
+            return this.mapper.Map<Employee>(employeeTransferObject);
         }
-
-        /// <inheritdoc/>
-        public async Task<bool> DeleteEmployeeAsync(int employeeId)
+        catch (EmployeeNotFoundException)
         {
-            return await this.dataAccessObject.DeleteEmployeeAsync(employeeId);
+            return null;
         }
+    }
 
-        /// <inheritdoc/>
-        public async IAsyncEnumerable<Employee> GetEmployeesAsync(int offset, int limit)
-        {
-            var employees = this.dataAccessObject.SelectEmployeesAsync(offset, limit);
-            await foreach (var employee in employees)
-            {
-                yield return this.mapper.Map<Employee>(employee);
-            }
-        }
+    /// <inheritdoc/>
+    public async Task<bool> UpdateEmployeeAsync(int employeeId, Employee employee)
+    {
+        _ = employee ?? throw new ArgumentNullException(nameof(employee));
 
-        /// <inheritdoc/>
-        public async Task<Employee> GetEmployeeAsync(int employeeId)
-        {
-            try
-            {
-                var employeeTransferObject = await this.dataAccessObject.FindEmployeeAsync(employeeId);
-                return this.mapper.Map<Employee>(employeeTransferObject);
-            }
-            catch (EmployeeNotFoundException)
-            {
-                return null;
-            }
-        }
-
-        /// <inheritdoc/>
-        public async Task<bool> UpdateEmployeeAsync(int employeeId, Employee employee)
-        {
-            _ = employee ?? throw new ArgumentNullException(nameof(employee));
-
-            return await this.dataAccessObject.UpdateEmployeeAsync(
-                employeeId,
-                this.mapper.Map<EmployeeTransferObject>(employee));
-        }
+        return await this.dataAccessObject.UpdateEmployeeAsync(
+            employeeId,
+            this.mapper.Map<EmployeeTransferObject>(employee));
     }
 }
