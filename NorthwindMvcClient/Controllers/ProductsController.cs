@@ -53,7 +53,7 @@ namespace NorthwindMvcClient.Controllers
                 return this.NotFound();
             }
 
-            return this.NoContent();
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }
