@@ -21,13 +21,11 @@ public class ProductsController : Controller
 
     public async Task<IActionResult> Index([FromQuery] int offset = 0, [FromQuery] int limit = 10)
     {
-        this.ViewBag.CurrentFilter = "text for search";
-
         var products = new List<Models.Product>();
 
         IAsyncEnumerable<Product> result = this.managementService.GetProductsAsync(offset, limit);
         int count = 0;
-        await foreach (var item in result)
+        await foreach (Product item in result)
         {
             products.Add(this.mapper.Map<Models.Product>(item));
             count++;

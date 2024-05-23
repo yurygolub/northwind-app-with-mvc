@@ -26,12 +26,12 @@ public class BloggingService : IBloggingService
 
     public async IAsyncEnumerable<BlogArticle> GetBlogArticlesAsync(int offset, int limit)
     {
-        var blogArticles = this.context.BlogArticles
+        IQueryable<BlogArticle> blogArticles = this.context.BlogArticles
             .Skip(offset)
             .Take(limit)
             .Select(b => this.mapper.Map<BlogArticle>(b));
 
-        await foreach (var blogArticle in blogArticles.AsAsyncEnumerable())
+        await foreach (BlogArticle blogArticle in blogArticles.AsAsyncEnumerable())
         {
             yield return blogArticle;
         }
@@ -39,7 +39,7 @@ public class BloggingService : IBloggingService
 
     public async Task<BlogArticle> GetBlogArticleAsync(int blogArticleId)
     {
-        var blogArticleEntity = await this.context.BlogArticles.FindAsync(blogArticleId);
+        BlogArticleEntity blogArticleEntity = await this.context.BlogArticles.FindAsync(blogArticleId);
         if (blogArticleEntity is null)
         {
             return null;
@@ -64,7 +64,7 @@ public class BloggingService : IBloggingService
 
     public async Task<bool> DeleteBlogArticleAsync(int blogArticleId)
     {
-        var blogArticle = await this.context.BlogArticles.FindAsync(blogArticleId);
+        BlogArticleEntity blogArticle = await this.context.BlogArticles.FindAsync(blogArticleId);
         if (blogArticle != null)
         {
             this.context.BlogArticles.Remove(blogArticle);
@@ -79,7 +79,7 @@ public class BloggingService : IBloggingService
     {
         _ = blogArticle ?? throw new ArgumentNullException(nameof(blogArticle));
 
-        var blogArticleEntity = await this.context.BlogArticles.FindAsync(blogArticleId);
+        BlogArticleEntity blogArticleEntity = await this.context.BlogArticles.FindAsync(blogArticleId);
         if (blogArticleEntity is null)
         {
             return false;
@@ -95,13 +95,13 @@ public class BloggingService : IBloggingService
 
     public async IAsyncEnumerable<int> GetAllRelatedProductIdsAsync(int articleId, int offset, int limit)
     {
-        var productIds = this.context.BlogArticleProducts
+        IQueryable<int> productIds = this.context.BlogArticleProducts
             .Where(b => b.BlogArticleId == articleId)
             .Skip(offset)
             .Take(limit)
             .Select(b => b.ProductId);
 
-        await foreach (var productId in productIds.AsAsyncEnumerable())
+        await foreach (int productId in productIds.AsAsyncEnumerable())
         {
             yield return productId;
         }
@@ -123,10 +123,10 @@ public class BloggingService : IBloggingService
 
     public async Task<bool> RemoveProductLinkAsync(int articleId, int productId)
     {
-        var blogArticleProductEntity = await this.context.BlogArticleProducts
+        BlogArticleProductEntity blogArticleProductEntity = await this.context.BlogArticleProducts
             .FirstAsync(b => (b.BlogArticleId == articleId) && (b.ProductId == productId));
 
-        if (blogArticleProductEntity != null)
+        if (blogArticleProductEntity is not null)
         {
             this.context.BlogArticleProducts.Remove(blogArticleProductEntity);
             await this.context.SaveChangesAsync();
@@ -138,13 +138,13 @@ public class BloggingService : IBloggingService
 
     public async IAsyncEnumerable<BlogComment> GetAllBlogCommentsAsync(int articleId, int offset, int limit)
     {
-        var blogComments = this.context.BlogComments
+        IQueryable<BlogComment> blogComments = this.context.BlogComments
             .Where(b => b.BlogArticleId == articleId)
             .Skip(offset)
             .Take(limit)
             .Select(b => this.mapper.Map<BlogComment>(b));
 
-        await foreach (var blogComment in blogComments.AsAsyncEnumerable())
+        await foreach (BlogComment blogComment in blogComments.AsAsyncEnumerable())
         {
             yield return blogComment;
         }
@@ -168,7 +168,7 @@ public class BloggingService : IBloggingService
     {
         _ = blogComment ?? throw new ArgumentNullException(nameof(blogComment));
 
-        var blogCommentEntity = await this.context.BlogComments
+        BlogCommentEntity blogCommentEntity = await this.context.BlogComments
             .FirstAsync(c => (c.BlogArticleId == articleId) && (c.Id == commentId));
 
         if (blogCommentEntity is null)
@@ -186,10 +186,10 @@ public class BloggingService : IBloggingService
 
     public async Task<bool> DeleteBlogCommentAsync(int articleId, int commentId)
     {
-        var blogCommentEntity = await this.context.BlogComments
+        BlogCommentEntity blogCommentEntity = await this.context.BlogComments
             .FirstOrDefaultAsync(c => (c.BlogArticleId == articleId) && (c.Id == commentId));
 
-        if (blogCommentEntity != null)
+        if (blogCommentEntity is not null)
         {
             this.context.BlogComments.Remove(blogCommentEntity);
             await this.context.SaveChangesAsync();

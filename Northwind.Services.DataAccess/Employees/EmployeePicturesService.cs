@@ -63,7 +63,7 @@ public class EmployeePicturesService : IEmployeePicturesService
             return false;
         }
 
-        await using MemoryStream memoryStream = new MemoryStream();
+        await using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         memoryStream.ToArray().CopyTo(employee.Photo, 78);
 

@@ -28,7 +28,7 @@ public class EmployeesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetEmployeeAsync(int id)
     {
-        var employee = await this.managementService.GetEmployeeAsync(id);
+        Employee employee = await this.managementService.GetEmployeeAsync(id);
         if (employee is null)
         {
             return this.NotFound();
@@ -40,7 +40,7 @@ public class EmployeesController : ControllerBase
     [HttpGet("{id}/photo")]
     public async Task<IActionResult> GetEmployeePhotoAsync(int id)
     {
-        var employeePhoto = await this.picturesService.GetEmployeePictureAsync(id);
+        Stream employeePhoto = await this.picturesService.GetEmployeePictureAsync(id);
         if (employeePhoto is null)
         {
             return this.NotFound();

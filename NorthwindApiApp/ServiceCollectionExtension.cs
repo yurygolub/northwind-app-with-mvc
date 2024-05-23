@@ -9,6 +9,7 @@ using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Blogging;
 using Northwind.Services.EntityFrameworkCore.Blogging.Context;
 using Northwind.Services.EntityFrameworkCore.Blogging.MappingProfiles;
+using Northwind.Services.EntityFrameworkCore.Context;
 using Northwind.Services.Products;
 using DataAccess = Northwind.Services.DataAccess;
 using EntityFramework = Northwind.Services.EntityFrameworkCore;
@@ -40,7 +41,7 @@ public static class ServiceCollectionExtension
             .AddTransient<IEmployeePicturesService, EntityFramework.Employees.EmployeePicturesService>()
             .AddTransient<IBloggingService, BloggingService>()
             .AddTransient<IDesignTimeDbContextFactory<BloggingContext>, DesignTimeBloggingContextFactory>()
-            .AddScoped(s => new EntityFramework.Context.NorthwindContext(configuration.GetConnectionString("SqlConnection")))
+            .AddScoped(s => new NorthwindContext(configuration.GetConnectionString("SqlConnection")))
             .AddAutoMapper(typeof(MappingProfile), typeof(EntityFramework.MappingProfiles.MappingProfile));
     }
 }

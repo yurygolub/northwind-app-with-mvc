@@ -24,8 +24,8 @@ public class DesignTimeBloggingContextFactory : IDesignTimeDbContextFactory<Blog
         const string connectionStringName = "NORTHWIND_BLOGGING";
         const string connectioStringPrefix = "SQLCONNSTR_";
 
-        var configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-        var connectionString = configuration.GetConnectionString(connectionStringName);
+        IConfigurationRoot configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+        string connectionString = configuration.GetConnectionString(connectionStringName);
 
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -34,7 +34,9 @@ public class DesignTimeBloggingContextFactory : IDesignTimeDbContextFactory<Blog
 
         this.logger?.LogInformation($"Using {connectioStringPrefix}{connectionStringName} environment variable as a connection string.");
 
-        var builderOptions = new DbContextOptionsBuilder<BloggingContext>().UseSqlServer(connectionString).Options;
+        DbContextOptions<BloggingContext> builderOptions = new DbContextOptionsBuilder<BloggingContext>()
+            .UseSqlServer(connectionString).Options;
+
         return new BloggingContext(builderOptions);
     }
 }

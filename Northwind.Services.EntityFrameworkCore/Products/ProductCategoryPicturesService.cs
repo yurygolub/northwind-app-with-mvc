@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Northwind.Services.EntityFrameworkCore.Context;
+using Northwind.Services.EntityFrameworkCore.Entities;
 using Northwind.Services.Products;
 
 namespace Northwind.Services.EntityFrameworkCore.Products;
@@ -25,25 +26,25 @@ public class ProductCategoryPicturesService : IProductCategoryPicturesService
     /// <inheritdoc/>
     public async Task<Stream> GetProductCategoryPictureAsync(int categoryId)
     {
-        var contextCategory = await this.context.Categories.FindAsync(categoryId);
-        if (contextCategory?.Picture is null)
+        CategoryEntity categoryEntity = await this.context.Categories.FindAsync(categoryId);
+        if (categoryEntity?.Picture is null)
         {
             return null;
         }
 
-        return new MemoryStream(contextCategory.Picture[78..]);
+        return new MemoryStream(categoryEntity.Picture[78..]);
     }
 
     /// <inheritdoc/>
     public async Task<bool> DeleteProductCategoryPictureAsync(int categoryId)
     {
-        var contextCategory = await this.context.Categories.FindAsync(categoryId);
-        if (contextCategory is null)
+        CategoryEntity categoryEntity = await this.context.Categories.FindAsync(categoryId);
+        if (categoryEntity is null)
         {
             return false;
         }
 
-        contextCategory.Picture = null;
+        categoryEntity.Picture = null;
 
         await this.context.SaveChangesAsync();
         return true;
@@ -54,15 +55,15 @@ public class ProductCategoryPicturesService : IProductCategoryPicturesService
     {
         _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-        var contextCategory = await this.context.Categories.FindAsync(categoryId);
-        if (contextCategory is null)
+        CategoryEntity categoryEntity = await this.context.Categories.FindAsync(categoryId);
+        if (categoryEntity is null)
         {
             return false;
         }
 
-        await using MemoryStream memoryStream = new MemoryStream();
+        await using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
-        memoryStream.ToArray().CopyTo(contextCategory.Picture, 78);
+        memoryStream.ToArray().CopyTo(categoryEntity.Picture, 78);
 
         await this.context.SaveChangesAsync();
         return true;

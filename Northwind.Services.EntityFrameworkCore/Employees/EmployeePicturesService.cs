@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Northwind.Services.Employees;
 using Northwind.Services.EntityFrameworkCore.Context;
+using Northwind.Services.EntityFrameworkCore.Entities;
 
 namespace Northwind.Services.EntityFrameworkCore.Employees;
 
@@ -25,25 +26,25 @@ public class EmployeePicturesService : IEmployeePicturesService
     /// <inheritdoc/>
     public async Task<Stream> GetEmployeePictureAsync(int employeeId)
     {
-        var employee = await this.context.Employees.FindAsync(employeeId);
-        if (employee?.Photo is null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity?.Photo is null)
         {
             return null;
         }
 
-        return new MemoryStream(employee.Photo[78..]);
+        return new MemoryStream(employeeEntity.Photo[78..]);
     }
 
     /// <inheritdoc/>
     public async Task<bool> DeleteEmployeePictureAsync(int employeeId)
     {
-        var employee = await this.context.Employees.FindAsync(employeeId);
-        if (employee is null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity is null)
         {
             return false;
         }
 
-        employee.Photo = null;
+        employeeEntity.Photo = null;
 
         await this.context.SaveChangesAsync();
         return true;
@@ -54,15 +55,15 @@ public class EmployeePicturesService : IEmployeePicturesService
     {
         _ = stream ?? throw new ArgumentNullException(nameof(stream));
 
-        var employee = await this.context.Employees.FindAsync(employeeId);
-        if (employee is null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity is null)
         {
             return false;
         }
 
-        await using MemoryStream memoryStream = new MemoryStream();
+        await using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
-        memoryStream.ToArray().CopyTo(employee.Photo, 78);
+        memoryStream.ToArray().CopyTo(employeeEntity.Photo, 78);
 
         await this.context.SaveChangesAsync();
 

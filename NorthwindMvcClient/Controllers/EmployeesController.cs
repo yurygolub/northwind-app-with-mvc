@@ -27,7 +27,7 @@ public class EmployeesController : Controller
         int count = 0;
         await foreach (var item in result)
         {
-            var employee = this.mapper.Map<Models.Employee>(item);
+            Models.Employee employee = this.mapper.Map<Models.Employee>(item);
             if (employee.Photo?.Length != 0)
             {
                 employee.Photo = employee.Photo[78..];

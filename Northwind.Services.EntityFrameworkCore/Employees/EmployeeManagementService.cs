@@ -42,12 +42,12 @@ public class EmployeeManagementService : IEmployeeManagementService
     /// <inheritdoc/>
     public async Task<bool> DeleteEmployeeAsync(int employeeId)
     {
-        var employee = await this.context.Employees.FindAsync(employeeId);
-        if (employee != null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity is not null)
         {
-            this.context.Employees.Remove(employee);
+            this.context.Employees.Remove(employeeEntity);
 
-            var orders = this.context.Orders.Where(order => order.Employee == employee);
+            IQueryable<Order> orders = this.context.Orders.Where(order => order.Employee == employeeEntity);
             this.context.Orders.RemoveRange(orders);
 
             await this.context.SaveChangesAsync();
@@ -60,12 +60,12 @@ public class EmployeeManagementService : IEmployeeManagementService
     /// <inheritdoc/>
     public async IAsyncEnumerable<Employee> GetEmployeesAsync(int offset, int limit)
     {
-        var employees = this.context.Employees
+        IQueryable<Employee> employees = this.context.Employees
             .Skip(offset)
             .Take(limit)
             .Select(e => this.mapper.Map<Employee>(e));
 
-        await foreach (var employee in employees.AsAsyncEnumerable())
+        await foreach (Employee employee in employees.AsAsyncEnumerable())
         {
             yield return employee;
         }
@@ -74,13 +74,13 @@ public class EmployeeManagementService : IEmployeeManagementService
     /// <inheritdoc/>
     public async Task<Employee> GetEmployeeAsync(int employeeId)
     {
-        var contextEmployee = await this.context.Employees.FindAsync(employeeId);
-        if (contextEmployee is null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity is null)
         {
             return null;
         }
 
-        return this.mapper.Map<Employee>(contextEmployee);
+        return this.mapper.Map<Employee>(employeeEntity);
     }
 
     /// <inheritdoc/>
@@ -88,29 +88,29 @@ public class EmployeeManagementService : IEmployeeManagementService
     {
         _ = employee ?? throw new ArgumentNullException(nameof(employee));
 
-        var contextEmployee = await this.context.Employees.FindAsync(employeeId);
-        if (contextEmployee is null)
+        EmployeeEntity employeeEntity = await this.context.Employees.FindAsync(employeeId);
+        if (employeeEntity is null)
         {
             return false;
         }
 
-        contextEmployee.Address = employee.Address;
-        contextEmployee.BirthDate = employee.BirthDate;
-        contextEmployee.City = employee.City;
-        contextEmployee.Country = employee.Country;
-        contextEmployee.Extension = employee.Extension;
-        contextEmployee.FirstName = employee.FirstName;
-        contextEmployee.LastName = employee.LastName;
-        contextEmployee.HireDate = employee.HireDate;
-        contextEmployee.HomePhone = employee.HomePhone;
-        contextEmployee.Notes = employee.Notes;
-        contextEmployee.Photo = employee.Photo;
-        contextEmployee.PhotoPath = employee.PhotoPath;
-        contextEmployee.PostalCode = employee.PostalCode;
-        contextEmployee.Region = employee.Region;
-        contextEmployee.ReportsTo = employee.ReportsTo;
-        contextEmployee.Title = employee.Title;
-        contextEmployee.TitleOfCourtesy = employee.TitleOfCourtesy;
+        employeeEntity.Address = employee.Address;
+        employeeEntity.BirthDate = employee.BirthDate;
+        employeeEntity.City = employee.City;
+        employeeEntity.Country = employee.Country;
+        employeeEntity.Extension = employee.Extension;
+        employeeEntity.FirstName = employee.FirstName;
+        employeeEntity.LastName = employee.LastName;
+        employeeEntity.HireDate = employee.HireDate;
+        employeeEntity.HomePhone = employee.HomePhone;
+        employeeEntity.Notes = employee.Notes;
+        employeeEntity.Photo = employee.Photo;
+        employeeEntity.PhotoPath = employee.PhotoPath;
+        employeeEntity.PostalCode = employee.PostalCode;
+        employeeEntity.Region = employee.Region;
+        employeeEntity.ReportsTo = employee.ReportsTo;
+        employeeEntity.Title = employee.Title;
+        employeeEntity.TitleOfCourtesy = employee.TitleOfCourtesy;
 
         await this.context.SaveChangesAsync();
         return true;

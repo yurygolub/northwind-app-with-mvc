@@ -67,7 +67,7 @@ public class ProductCategoryPicturesService : IProductCategoryPicturesService
             return false;
         }
 
-        await using MemoryStream memoryStream = new MemoryStream();
+        await using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         memoryStream.ToArray().CopyTo(category.Picture, 78);
 

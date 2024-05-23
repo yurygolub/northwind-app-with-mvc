@@ -28,7 +28,7 @@ public class ProductCategoriesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductCategoryAsync(int id)
     {
-        var productCategory = await this.managementService.GetCategoryAsync(id);
+        ProductCategory productCategory = await this.managementService.GetCategoryAsync(id);
         if (productCategory is null)
         {
             return this.NotFound();
@@ -40,7 +40,7 @@ public class ProductCategoriesController : ControllerBase
     [HttpGet("{id}/picture")]
     public async Task<IActionResult> GetProductCategoryPictureAsync(int id)
     {
-        var picture = await this.picturesService.GetProductCategoryPictureAsync(id);
+        Stream picture = await this.picturesService.GetProductCategoryPictureAsync(id);
         if (picture is null)
         {
             return this.NotFound();

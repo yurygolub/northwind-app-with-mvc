@@ -29,8 +29,8 @@ public class BlogArticlesController : ControllerBase
     {
         await foreach (var blogArticle in this.bloggingService.GetBlogArticlesAsync(offset, limit))
         {
-            var author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
-            if (author != null)
+            Employee author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
+            if (author is not null)
             {
                 yield return new BlogArticleShortInfo(blogArticle, author);
             }
@@ -40,14 +40,13 @@ public class BlogArticlesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBlogArticleAsync(int id)
     {
-        var blogArticle = await this.bloggingService.GetBlogArticleAsync(id);
+        BlogArticle blogArticle = await this.bloggingService.GetBlogArticleAsync(id);
         if (blogArticle is null)
         {
             return this.NotFound();
         }
 
-        var author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
-
+        Employee author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
         if (author is null)
         {
             return this.NotFound();
@@ -61,7 +60,7 @@ public class BlogArticlesController : ControllerBase
     {
         _ = blogArticle ?? throw new ArgumentNullException(nameof(blogArticle));
 
-        var author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
+        Employee author = await this.employeeService.GetEmployeeAsync(blogArticle.AuthorId);
         if (author is null)
         {
             return this.NotFound();
@@ -96,8 +95,8 @@ public class BlogArticlesController : ControllerBase
     [HttpGet("{articleId}/products")]
     public async IAsyncEnumerable<Product> GetAllRelatedProductsAsync(int articleId, [FromQuery] int offset = 0, [FromQuery] int limit = 10)
     {
-        var productIds = this.bloggingService.GetAllRelatedProductIdsAsync(articleId, offset, limit);
-        await foreach (var productId in productIds)
+        IAsyncEnumerable<int> productIds = this.bloggingService.GetAllRelatedProductIdsAsync(articleId, offset, limit);
+        await foreach (int productId in productIds)
         {
             yield return await this.productService.GetProductAsync(productId);
         }
@@ -124,8 +123,8 @@ public class BlogArticlesController : ControllerBase
     [HttpGet("{articleId}/comments")]
     public async IAsyncEnumerable<BlogComment> GetAllBlogCommentsAsync(int articleId, [FromQuery] int offset = 0, [FromQuery] int limit = 10)
     {
-        var blogComments = this.bloggingService.GetAllBlogCommentsAsync(articleId, offset, limit);
-        await foreach (var blogComment in blogComments)
+        IAsyncEnumerable<BlogComment> blogComments = this.bloggingService.GetAllBlogCommentsAsync(articleId, offset, limit);
+        await foreach (BlogComment blogComment in blogComments)
         {
             yield return blogComment;
         }

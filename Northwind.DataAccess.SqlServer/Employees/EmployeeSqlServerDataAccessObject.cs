@@ -56,14 +56,14 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, employeeId, "@employeeID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@employeeID", employeeId, SqlDbType.Int, isNullable: false);
 
         if (this.connection.State != ConnectionState.Open)
         {
             await this.connection.OpenAsync();
         }
 
-        var result = await command.ExecuteNonQueryAsync();
+        int result = await command.ExecuteNonQueryAsync();
         return result > 0;
     }
 
@@ -80,14 +80,14 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, employeeId, "@employeeID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@employeeID", employeeId, SqlDbType.Int, isNullable: false);
 
         if (this.connection.State != ConnectionState.Open)
         {
             await this.connection.OpenAsync();
         }
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using SqlDataReader reader = await command.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
         {
@@ -122,15 +122,15 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
                 CommandType = CommandType.StoredProcedure,
             };
 
-            SetParameter(command, offset, "@offset", SqlDbType.Int, isNullable: false);
-            SetParameter(command, limit, "@limit", SqlDbType.Int, isNullable: false);
+            command.SetParameter("@offset", offset, SqlDbType.Int, isNullable: false);
+            command.SetParameter("@limit", limit, SqlDbType.Int, isNullable: false);
 
             if (this.connection.State != ConnectionState.Open)
             {
                 await this.connection.OpenAsync();
             }
 
-            await using var reader = await command.ExecuteReaderAsync();
+            await using SqlDataReader reader = await command.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
@@ -149,7 +149,7 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, employeeId, "@employeeID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@employeeID", employeeId, SqlDbType.Int, isNullable: false);
         AddSqlParameters(employee, command);
 
         if (this.connection.State != ConnectionState.Open)
@@ -157,7 +157,7 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
             await this.connection.OpenAsync();
         }
 
-        var result = await command.ExecuteNonQueryAsync();
+        int result = await command.ExecuteNonQueryAsync();
         return result > 0;
     }
 
@@ -196,37 +196,22 @@ public sealed class EmployeeSqlServerDataAccessObject : IEmployeeDataAccessObjec
 
     private static void AddSqlParameters(EmployeeTransferObject employee, SqlCommand command)
     {
-        SetParameter(command, employee.LastName, "@lastName", SqlDbType.NVarChar, 20, false);
-        SetParameter(command, employee.FirstName, "@firstName", SqlDbType.NVarChar, 10, false);
-        SetParameter(command, employee.Title, "@title", SqlDbType.NVarChar, 30);
-        SetParameter(command, employee.TitleOfCourtesy, "@titleOfCourtesy", SqlDbType.NVarChar, 25);
-        SetParameter(command, employee.BirthDate, "@birthDate", SqlDbType.DateTime);
-        SetParameter(command, employee.HireDate, "@hireDate", SqlDbType.DateTime);
-        SetParameter(command, employee.Address, "@address", SqlDbType.NVarChar, 60);
-        SetParameter(command, employee.City, "@city", SqlDbType.NVarChar, 15);
-        SetParameter(command, employee.Region, "@region", SqlDbType.NVarChar, 15);
-        SetParameter(command, employee.PostalCode, "@postalCode", SqlDbType.NVarChar, 10);
-        SetParameter(command, employee.Country, "@country", SqlDbType.NVarChar, 15);
-        SetParameter(command, employee.HomePhone, "@homePhone", SqlDbType.NVarChar, 24);
-        SetParameter(command, employee.Extension, "@extension", SqlDbType.NVarChar, 4);
-        SetParameter(command, employee.Photo, "@photo", SqlDbType.Image);
-        SetParameter(command, employee.Notes, "@notes", SqlDbType.NText);
-        SetParameter(command, employee.ReportsTo, "@reportsTo", SqlDbType.Int);
-        SetParameter(command, employee.PhotoPath, "@photoPath", SqlDbType.NVarChar, 255);
-    }
-
-    private static void SetParameter<T>(SqlCommand command, T property, string parameterName, SqlDbType dbType, int? size = null, bool isNullable = true)
-    {
-        if (size is null)
-        {
-            command.Parameters.Add(parameterName, dbType);
-        }
-        else
-        {
-            command.Parameters.Add(parameterName, dbType, (int)size);
-        }
-
-        command.Parameters[parameterName].IsNullable = isNullable;
-        command.Parameters[parameterName].Value = property ?? Convert.DBNull;
+        command.SetParameter("@lastName", employee.LastName, SqlDbType.NVarChar, 20, false);
+        command.SetParameter("@firstName", employee.FirstName, SqlDbType.NVarChar, 10, false);
+        command.SetParameter("@title", employee.Title, SqlDbType.NVarChar, 30);
+        command.SetParameter("@titleOfCourtesy", employee.TitleOfCourtesy, SqlDbType.NVarChar, 25);
+        command.SetParameter("@birthDate", employee.BirthDate, SqlDbType.DateTime);
+        command.SetParameter("@hireDate", employee.HireDate, SqlDbType.DateTime);
+        command.SetParameter("@address", employee.Address, SqlDbType.NVarChar, 60);
+        command.SetParameter("@city", employee.City, SqlDbType.NVarChar, 15);
+        command.SetParameter("@region", employee.Region, SqlDbType.NVarChar, 15);
+        command.SetParameter("@postalCode", employee.PostalCode, SqlDbType.NVarChar, 10);
+        command.SetParameter("@country", employee.Country, SqlDbType.NVarChar, 15);
+        command.SetParameter("@homePhone", employee.HomePhone, SqlDbType.NVarChar, 24);
+        command.SetParameter("@extension", employee.Extension, SqlDbType.NVarChar, 4);
+        command.SetParameter("@photo", employee.Photo, SqlDbType.Image);
+        command.SetParameter("@notes", employee.Notes, SqlDbType.NText);
+        command.SetParameter("@reportsTo", employee.ReportsTo, SqlDbType.Int);
+        command.SetParameter("@photoPath", employee.PhotoPath, SqlDbType.NVarChar, 255);
     }
 }

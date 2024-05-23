@@ -25,9 +25,9 @@ public class ProductCategoriesController : Controller
 
         IAsyncEnumerable<ProductCategory> result = this.managementService.GetCategoriesAsync(offset, limit);
         int count = 0;
-        await foreach (var item in result)
+        await foreach (ProductCategory item in result)
         {
-            var category = this.mapper.Map<Models.ProductCategory>(item);
+            Models.ProductCategory category = this.mapper.Map<Models.ProductCategory>(item);
             if (category.Picture?.Length != 0)
             {
                 category.Picture = category.Picture[78..];

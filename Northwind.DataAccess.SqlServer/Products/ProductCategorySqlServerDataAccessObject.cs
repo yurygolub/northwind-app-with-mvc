@@ -57,14 +57,14 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, productCategoryId, "@categoryID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@categoryID", productCategoryId, SqlDbType.Int, isNullable: false);
 
         if (this.connection.State != ConnectionState.Open)
         {
             await this.connection.OpenAsync();
         }
 
-        var result = await command.ExecuteNonQueryAsync();
+        int result = await command.ExecuteNonQueryAsync();
         return result > 0;
     }
 
@@ -81,14 +81,14 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, productCategoryId, "@categoryID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@categoryID", productCategoryId, SqlDbType.Int, isNullable: false);
 
         if (this.connection.State != ConnectionState.Open)
         {
             await this.connection.OpenAsync();
         }
 
-        await using var reader = await command.ExecuteReaderAsync();
+        await using SqlDataReader reader = await command.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
         {
@@ -111,7 +111,7 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             throw new ArgumentException("Must be greater than zero.", nameof(limit));
         }
 
-        await foreach (var productCategory in SelectProductsAsync(offset, limit))
+        await foreach (ProductCategoryTransferObject productCategory in SelectProductsAsync(offset, limit))
         {
             yield return productCategory;
         }
@@ -123,15 +123,15 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
                 CommandType = CommandType.StoredProcedure,
             };
 
-            SetParameter(command, offset, "@offset", SqlDbType.Int, isNullable: false);
-            SetParameter(command, limit, "@limit", SqlDbType.Int, isNullable: false);
+            command.SetParameter("@offset", offset, SqlDbType.Int, isNullable: false);
+            command.SetParameter("@limit", limit, SqlDbType.Int, isNullable: false);
 
             if (this.connection.State != ConnectionState.Open)
             {
                 await this.connection.OpenAsync();
             }
 
-            await using var reader = await command.ExecuteReaderAsync();
+            await using SqlDataReader reader = await command.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
@@ -150,9 +150,9 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             throw new ArgumentException("Collection is empty.", nameof(productCategoryNames));
         }
 
-        foreach (var name in productCategoryNames)
+        foreach (string name in productCategoryNames)
         {
-            await foreach (var productCategory in SelectProductsByNameAsync(name))
+            await foreach (ProductCategoryTransferObject productCategory in SelectProductsByNameAsync(name))
             {
                 yield return productCategory;
             }
@@ -165,14 +165,14 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
                 CommandType = CommandType.StoredProcedure,
             };
 
-            SetParameter(command, productCategoryName, "@categoryName", SqlDbType.NVarChar, 15, false);
+            command.SetParameter("@categoryName", productCategoryName, SqlDbType.NVarChar, 15, false);
 
             if (this.connection.State != ConnectionState.Open)
             {
                 await this.connection.OpenAsync();
             }
 
-            await using var reader = await command.ExecuteReaderAsync();
+            await using SqlDataReader reader = await command.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
@@ -191,7 +191,7 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             CommandType = CommandType.StoredProcedure,
         };
 
-        SetParameter(command, productCategoryId, "@categoryID", SqlDbType.Int, isNullable: false);
+        command.SetParameter("@categoryID", productCategoryId, SqlDbType.Int, isNullable: false);
         AddSqlParameters(productCategory, command);
 
         if (this.connection.State != ConnectionState.Open)
@@ -199,7 +199,7 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
             await this.connection.OpenAsync();
         }
 
-        var result = await command.ExecuteNonQueryAsync();
+        int result = await command.ExecuteNonQueryAsync();
         return result > 0;
     }
 
@@ -220,23 +220,8 @@ public sealed class ProductCategorySqlServerDataAccessObject : IProductCategoryD
 
     private static void AddSqlParameters(ProductCategoryTransferObject productCategory, SqlCommand command)
     {
-        SetParameter(command, productCategory.Name, "@categoryName", SqlDbType.NVarChar, 15, false);
-        SetParameter(command, productCategory.Description, "@description", SqlDbType.NText);
-        SetParameter(command, productCategory.Picture, "@picture", SqlDbType.Image);
-    }
-
-    private static void SetParameter<T>(SqlCommand command, T property, string parameterName, SqlDbType dbType, int? size = null, bool isNullable = true)
-    {
-        if (size is null)
-        {
-            command.Parameters.Add(parameterName, dbType);
-        }
-        else
-        {
-            command.Parameters.Add(parameterName, dbType, (int)size);
-        }
-
-        command.Parameters[parameterName].IsNullable = isNullable;
-        command.Parameters[parameterName].Value = property ?? Convert.DBNull;
+        command.SetParameter("@categoryName", productCategory.Name, SqlDbType.NVarChar, 15, false);
+        command.SetParameter("@description", productCategory.Description, SqlDbType.NText);
+        command.SetParameter("@picture", productCategory.Picture, SqlDbType.Image);
     }
 }
