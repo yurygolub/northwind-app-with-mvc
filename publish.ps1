@@ -26,7 +26,7 @@ elseif(Test-Path -Path $Project -PathType Container)
 }
 else
 {
-    Write-Warning "sprecified project '$Project' does not exist"
+    Write-Warning "specified project '$Project' does not exist"
     return
 }
 
