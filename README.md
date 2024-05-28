@@ -3,6 +3,7 @@
 ## NorthwindMvcClient
 
 ### Build and Run
+
 ```sh
 git clone https://github.com/yurygolub/northwind-app-with-mvc.git
 ```
@@ -16,13 +17,15 @@ dotnet run
 ```
 
 ### Release
-```sh
-dotnet publish NorthwindMvcClient/NorthwindMvcClient.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --property:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
+
+```powershell
+.\publish.ps1 -Project .\NorthwindMvcClient\
 ```
 
 ## NorthwindApiApp
 
 ### Build and Run
+
 ```sh
 git clone https://github.com/yurygolub/northwind-app-with-mvc.git
 ```
@@ -36,8 +39,9 @@ dotnet run
 ```
 
 ### Release
-```sh
-dotnet publish NorthwindApiApp/NorthwindApiApp.csproj --configuration Release --output publish --property:DebugType=None --property:DebugSymbols=false --property:PublishSingleFile=true --property:IncludeNativeLibrariesForSelfExtract=true --no-self-contained
+
+```powershell
+.\publish.ps1 -Project .\NorthwindApiApp\
 ```
 
 ### API
@@ -156,6 +160,7 @@ Update JSON payload structure:
 | Delete           | DELETE    | /api/articles/{article-id}/comments/{id} |
 
 ### Change services
+
 use following files to configure services
 * in production mode: \northwind-app-with-mvc\NorthwindApiApp\appsettings.json
 * in development mode: \northwind-app-with-mvc\NorthwindApiApp\appsettings.Development.json
@@ -167,6 +172,7 @@ set "Mode" to use one of the following service types
 ### Create databases
 
 #### Northwind
+
 before using local database services you have to create a database
 * create database using SQL script [instnwnd.sql](https://github.com/yurygolub/northwind-app-with-mvc/blob/aec628ba2d656df31b29b25fbb0340b8e70ca4b6/Northwind.DataAccess.SqlServer/Sql%20scripts/instnwnd.sql)
 * create stored procedures using this file: \northwind-app-with-mvc\Northwind.DataAccess.SqlServer\Sql scripts\dbo.CreateProcedures.sql
@@ -176,21 +182,25 @@ before using local database services you have to create a database
 ##### PowerShell
 
 install ef tool:
+
 ```sh
 dotnet tool install --global dotnet-ef
 ```
 
 set environment variable:
-```sh
-$env:SQLCONNSTR_NORTHWIND_BLOGGING = 'data source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;'
+
+```powershell
+$Env:SQLCONNSTR_NORTHWIND_BLOGGING = 'data source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;'
 ```
 
 show environment variables:
-```sh
-dir env:
+
+```powershell
+ls Env:\
 ```
 
 migrate database:
+
 ```sh
 dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogging
 ```
@@ -198,21 +208,25 @@ dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogg
 ##### Command prompt
 
 install ef tool:
+
 ```sh
 dotnet tool install --global dotnet-ef
 ```
 
 set environment variable:
+
 ```sh
 set SQLCONNSTR_NORTHWIND_BLOGGING=data source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;
 ```
 
 show environment variables:
+
 ```sh
 set
 ```
 
 migrate database:
+
 ```sh
 dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogging
 ```
