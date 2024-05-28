@@ -179,13 +179,13 @@ before using local database services you have to create a database
 
 #### NorthwindBlogging
 
-##### PowerShell
-
-install ef tool:
+Run the following command to make the Entity Framework tool available:
 
 ```sh
-dotnet tool install --global dotnet-ef
+dotnet tool restore
 ```
+
+##### PowerShell
 
 set environment variable:
 
@@ -206,12 +206,6 @@ dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogg
 ```
 
 ##### Command prompt
-
-install ef tool:
-
-```sh
-dotnet tool install --global dotnet-ef
-```
 
 set environment variable:
 
