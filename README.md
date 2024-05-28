@@ -175,11 +175,30 @@ set "Mode" to use one of the following service types
 
 before using local database services you have to create a database
 * create database using SQL script [instnwnd.sql](https://github.com/microsoft/sql-server-samples/blob/65c27abe8a87c4990998a7007f1d9ef912c0f366/samples/databases/northwind-pubs/instnwnd.sql)
-* create stored procedures using this file: \northwind-app-with-mvc\Northwind.DataAccess.SqlServer\Sql scripts\dbo.CreateProcedures.sql
+* create stored procedures using this file: \northwind-app-with-mvc\Northwind.DataAccess.SqlServer\sql-scripts\create-procedures.sql
+
+Download script file
 
 ```powershell
 curl.exe -LO https://raw.githubusercontent.com/microsoft/sql-server-samples/65c27abe8a87c4990998a7007f1d9ef912c0f366/samples/databases/northwind-pubs/instnwnd.sql
-SQLCMD.EXE -E -S .\SQLEXPRESS -i .\instnwnd.sql
+```
+
+```powershell
+SQLCMD.EXE -E -S "(LocalDB)\MSSQLLocalDB" -i .\instnwnd.sql
+SQLCMD.EXE -E -S "(LocalDB)\MSSQLLocalDB" -d Northwind -i .\Northwind.DataAccess.SqlServer\sql-scripts\create-procedures.sql
+```
+
+Connect to mssqllocaldb
+
+```powershell
+SQLCMD.EXE -E -S "(LocalDB)\MSSQLLocalDB"
+```
+
+Get all databases
+
+```sql
+SELECT name FROM sys.databases
+GO
 ```
 
 #### NorthwindBlogging
@@ -190,12 +209,18 @@ Run the following command to make the Entity Framework tool available:
 dotnet tool restore
 ```
 
+Apply migrations:
+
+```sh
+dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogging
+```
+
 ##### PowerShell
 
 set environment variable:
 
 ```powershell
-$Env:SQLCONNSTR_NORTHWIND_BLOGGING = 'data source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;'
+$Env:SQLCONNSTR_NORTHWIND_BLOGGING = 'Data Source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging'
 ```
 
 show environment variables:
@@ -204,28 +229,16 @@ show environment variables:
 ls Env:\
 ```
 
-migrate database:
-
-```sh
-dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogging
-```
-
 ##### Command prompt
 
 set environment variable:
 
 ```sh
-set SQLCONNSTR_NORTHWIND_BLOGGING=data source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;
+set SQLCONNSTR_NORTHWIND_BLOGGING=Data Source=(localdb)\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging
 ```
 
 show environment variables:
 
 ```sh
 set
-```
-
-migrate database:
-
-```sh
-dotnet ef database update --project Northwind.Services.EntityFrameworkCore.Blogging
 ```

@@ -19,9 +19,9 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "SQLCONNSTR_NORTHWIND_BLOGGING": "data source=(localdb)\\MSSQLLocalDB; Integrated Security=True; Initial Catalog=NorthwindBlogging;"
+        "SQLCONNSTR_NORTHWIND_BLOGGING": "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=NorthwindBlogging;Integrated Security=True"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "http://localhost:5000;https://localhost:5001"
     }
   }
 }
