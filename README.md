@@ -194,6 +194,17 @@ Connect to mssqllocaldb
 SQLCMD.EXE -E -S "(LocalDB)\MSSQLLocalDB"
 ```
 
+In case of problems with connecting
+
+```powershell
+SqlLocalDB.exe info MSSQLLocalDB
+SqlLocalDB.exe stop MSSQLLocalDB
+SqlLocalDB.exe delete MSSQLLocalDB
+SqlLocalDB.exe start MSSQLLocalDB
+```
+
+> This will delete all your databases located in MSSQLLocalDB. Proceed with caution
+
 Get all databases
 
 ```sql
